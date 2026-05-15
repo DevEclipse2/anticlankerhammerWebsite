@@ -11,7 +11,7 @@ const loader = new THREE.TextureLoader();
 
 // 2. Load an image
 // Replace the URL below with your own image path (e.g., 'crate.jpg')
-const texture = loader.load('https://threejs.org/examples/textures/crate.gif');
+const texture = loader.load('clanka.jpg');
 
 // 3. Apply the texture to a Material
 const geometry = new THREE.BoxGeometry(1, 1, 1);
