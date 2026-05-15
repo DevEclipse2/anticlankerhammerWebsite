@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hello World JS</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #323a44;
+        }
+        #message {
+            font-size: 3rem;
+            color: #e08e8e;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- This is the container where our JS will inject the text -->
+    <h1 id="message">Loading...</h1>
+
+    <script>
+        // JavaScript logic starts here
+        const heading = document.getElementById('message');
+        
+        // Changing the text content via JS
+        heading.textContent = 'Hello World!';
+        
+        // Logging it to the browser console as well
+        console.log('JavaScript says: Hello World!');
+    </script>
+</body>
+</html>
