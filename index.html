@@ -119,7 +119,7 @@
             display: flex;
             align-items: right;
             justify-content: flex-end; 
-            padding: 0 10%;
+            padding: 0 30%;
             padding-top: 80px; /* Offset for fixed header */
             color: var(--text-light);
             position: relative;
@@ -132,18 +132,20 @@
             position: absolute;
             top: -20%;
             right: -10%;
-            width: 600px;
+            width: 0px;
             height: 600px;
             background: radial-gradient(circle, rgba(227,66,52,0.15) 0%, rgba(255,107,53,0) 70%);
             border-radius: 50%;
             pointer-events: none;
         }
-
+        
         .hero-content {
-            max-width: 650px;
+            max-width: 800px;
             position: relative;
             z-index: 2;
-            text-align: right;
+            text-align: left;
+            margin-left: auto;
+            margin-right: 0vw;
         }
         
         .right-trapezoid {
@@ -158,7 +160,7 @@
         background: linear-gradient(90deg, #ff9318 0%, #ff3c00 100%);
         
         /* The magic: Top-Left, Top-Right, Bottom-Right, Bottom-Left */
-        clip-path: polygon(55% 0%, 100% 0%, 100% 100%, 30% 100%);
+        clip-path: polygon(65% 0%, 100% 0%, 100% 100%, 30% 100%);
         }
 
         .hero h1 {
@@ -325,7 +327,7 @@
             .hero {
                 padding: 0 5%;
                 padding-top: 80px;
-                text-align: center;
+                text-align: right;
             }
             .hero h1 {
                 font-size: 2.5rem;
@@ -334,12 +336,65 @@
                 padding: 5rem 5%;
             }
         }
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #f0f2f5;
+            overflow-x: hidden; /* Hides images when they go off-screen */
+            display: flex;
+            align-items: center; 
+            height: 100vh;
+        }
 
+        .conveyor-container {
+            width: 100vw;
+            position: relative;
+            height: 100vh; /* Matches the height of the images */
+        }
+
+        .looping-image {
+            width: 150px; 
+            height: auto;
+            position: absolute; /* Allows images to layer and move independently */
+            left: 0;
+            
+            /* Base animation settings */
+            animation-name: conveyorLoop;
+            animation-duration: 8s; /* Total time to cross the screen */
+            animation-iteration-count: infinite;
+            animation-timing-function: linear;
+            /* Initially hide images off-screen before animation starts */
+            transform: translate(-150px, 100vh) rotate(-45deg);
+        }
+
+        /* 
+           STAGGERING THE IMAGES 
+           With an 8-second total duration and 8 images, 
+           we delay each one by exactly 1 second (8s / 8 = 1s spacing).
+        */
+        .img1 { animation-delay: 0s; }
+        .img2 { animation-delay: 1s; }
+        .img3 { animation-delay: 2s; }
+        .img4 { animation-delay: 3s; }
+        .img5 { animation-delay: 4s; }
+        .img6 { animation-delay: 5s; }
+        .img7 { animation-delay: 6s; }
+        .img8 { animation-delay: 7s; }
+        /* .img9 { animation-delay: 8s; } */
+
+        @keyframes conveyorLoop {
+            0% {
+                transform: translate(-500px,100vh) rotate(-55deg); 
+            }
+            100% {
+                transform: translate(29vw,-600px) rotate(-55deg); 
+            }
+        }
     </style>
 </head>
 <body>
 
-    <h1 id="message">my private schitzo hole</h1>
+    <!-- <h1 id="message">my private schitzo hole</h1> -->
    <div class="link-list">
     <a href="https://play.tigersoul.anticlankerhammer.org/index.html">play the version of tigersoul itch io is too stingy to host</a>
     <a href="big-stein.html">See jeffery epstein</a>
@@ -360,10 +415,23 @@
     <body>
          <section class="hero" id="home">
         <div class="hero-content">
-            <h1>ANTI<div><span>CLANKER</span><div><second>HAMMER</second></h1>
-            <!-- <p>Empowering forward-thinking enterprises with cutting-edge architectures, intuitive designs, and bulletproof deployment frameworks.</p> -->
+            <br><br><h1>ANTI<br><span>CLANKER</span><br><second>HAMMER</second></h1>
+            <p>Explore my catalog of games, for free! <br> robots not included!</p>
             <a href="#services" class="cta-btn">Explore Anti-bolt Architecture</a>
             
+            <!-- <img src="https://picsum.photos/150?random=9" alt="Image 9" class="looping-image img9"> -->
+        </div>
+        <div class="conveyor-container">
+        <!-- 8 Identical images with unique classes for staggering -->
+            <a href="http://www.google.com" target="_blank"> <img src="https://picsum.photos/150?random=1" alt="Image 1" class="looping-image img1"></a>
+            <!-- <img src="https://picsum.photos/150?random=1" alt="Image 1" class="looping-image img1"> -->
+            <img src="https://picsum.photos/150?random=2" alt="Image 2" class="looping-image img2">
+            <img src="https://picsum.photos/150?random=3" alt="Image 3" class="looping-image img3">
+            <img src="https://picsum.photos/150?random=4" alt="Image 4" class="looping-image img4">
+            <img src="https://picsum.photos/150?random=5" alt="Image 5" class="looping-image img5">
+            <img src="https://picsum.photos/150?random=6" alt="Image 6" class="looping-image img6">
+            <img src="https://picsum.photos/150?random=7" alt="Image 7" class="looping-image img7">
+            <img src="https://picsum.photos/150?random=8" alt="Image 8" class="looping-image img8">
         </div>
         <div class="right-trapezoid"></div>
         </section>

@@ -106,32 +106,33 @@
         }
         
         .right-trapezoid {
-  /* Positioning it on the right side of the screen */
-  position: fixed;
-  top: 0;
-  right: 0;
-  width: 100vw;
-  height: 100vh; /* Full screen height */
-  
-  /* Give it a background color or gradient */
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  
-  /* The magic: Top-Left, Top-Right, Bottom-Right, Bottom-Left */
-  clip-path: polygon(55% 0%, 100% 0%, 100% 100%, 30% 100%);
-}
+        /* Positioning it on the right side of the screen */
+        position: fixed;
+        top: 0;
+        right: 0;
+        width: 100vw;
+        height: 100vh; /* Full screen height */
+        
+        /* Give it a background color or gradient */
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        
+        /* The magic: Top-Left, Top-Right, Bottom-Right, Bottom-Left */
+        clip-path: polygon(55% 0%, 100% 0%, 100% 100%, 30% 100%);
+        }
 
         .hero h1 {
             font-size: 3.5rem;
             line-height: 1.2;
             margin-bottom: 1.5rem;
             font-weight: 800;
+            
         }
 
-        .hero h1 span.v-text {
+        .hero h1 span{
             color: var(--vermillion);
         }
 
-        .hero h1 span.o-text {
+        .hero h1 span{
             color: var(--orange);
         }
 

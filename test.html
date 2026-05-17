@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>8-Image Conveyor Belt</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #f0f2f5;
+            overflow-x: hidden; /* Hides images when they go off-screen */
+            display: flex;
+            align-items: center; 
+            height: 100vh;
+        }
+
+        .conveyor-container {
+            width: 100%;
+            position: relative;
+            height: 100vh; /* Matches the height of the images */
+        }
+
+        .looping-image {
+            width: 150px; 
+            height: auto;
+            position: absolute; /* Allows images to layer and move independently */
+            left: 0;
+            
+            /* Base animation settings */
+            animation-name: conveyorLoop;
+            animation-duration: 8s; /* Total time to cross the screen */
+            animation-iteration-count: infinite;
+            animation-timing-function: linear;
+            /* Initially hide images off-screen before animation starts */
+            transform: translate(-150px, 100vh) rotate(-45deg);
+        }
+
+        /* 
+           STAGGERING THE IMAGES 
+           With an 8-second total duration and 8 images, 
+           we delay each one by exactly 1 second (8s / 8 = 1s spacing).
+        */
+        .img1 { animation-delay: 0s; }
+        .img2 { animation-delay: 1s; }
+        .img3 { animation-delay: 2s; }
+        .img4 { animation-delay: 3s; }
+        .img5 { animation-delay: 4s; }
+        .img6 { animation-delay: 5s; }
+        .img7 { animation-delay: 6s; }
+        .img8 { animation-delay: 7s; }
+        /* .img9 { animation-delay: 8s; } */
+
+        @keyframes conveyorLoop {
+            0% {
+                transform: translate(-150px,100vh) rotate(-45deg); 
+            }
+            100% {
+                transform: translate(60vw,-300px) rotate(-45deg); 
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="conveyor-container">
+        <!-- 8 Identical images with unique classes for staggering -->
+          <a href="http://www.google.com" target="_blank"> <img src="https://picsum.photos/150?random=1" alt="Image 1" class="looping-image img1"></a>
+        <!-- <img src="https://picsum.photos/150?random=1" alt="Image 1" class="looping-image img1"> -->
+        <img src="https://picsum.photos/150?random=2" alt="Image 2" class="looping-image img2">
+        <img src="https://picsum.photos/150?random=3" alt="Image 3" class="looping-image img3">
+        <img src="https://picsum.photos/150?random=4" alt="Image 4" class="looping-image img4">
+        <img src="https://picsum.photos/150?random=5" alt="Image 5" class="looping-image img5">
+        <img src="https://picsum.photos/150?random=6" alt="Image 6" class="looping-image img6">
+        <img src="https://picsum.photos/150?random=7" alt="Image 7" class="looping-image img7">
+        <img src="https://picsum.photos/150?random=8" alt="Image 8" class="looping-image img8">
+        <!-- <img src="https://picsum.photos/150?random=9" alt="Image 9" class="looping-image img9"> -->
+    </div>
+
+</body>
+</html>
