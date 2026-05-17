@@ -1,0 +1,84 @@
+:root {
+  /* Tweak these variables to change the layout */
+  --angle: 15deg;
+  --speed: 12s;
+  --image-size: 140px;
+  --gap: 20px;
+}
+
+body, html {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  background-color: #111111; /* Left side background color */
+  overflow: hidden; /* Crucial: hides the corners of the rotated container */
+}
+
+.scene {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+}
+
+/* 
+  Creates the trapezium shape. 
+  It's actually a massive rectangle rotated to create a slanted left edge.
+*/
+.trapezium-container {
+  position: absolute;
+  bottom: -20vh; /* Extended slightly below screen to cover corners during rotation */
+  left: 50%;     /* Starts at the middle of the screen */
+  width: 100vw;  /* Wide enough to cover the rest of the right side off-screen */
+  height: 150vh; /* Taller than screen to cover top corners */
+  
+  background-color: #222222; /* Trapezium background color */
+  
+  /* The magic rotation */
+  transform-origin: bottom left;
+  transform: rotate(var(--angle));
+  
+  /* Optional: gives a sharp border to the edge */
+  border-left: 3px solid #ff4b4b;
+}
+
+/* The conveyor belt sitting right on the slanted edge */
+.conveyor-track {
+  position: absolute;
+  left: 20px; /* Distance from the slanted edge */
+  top: 0;
+  display: flex;
+  flex-direction: column;
+  
+  /* The infinite scroll animation */
+  animation: scroll var(--speed) linear infinite;
+}
+
+/* Groups of images to allow for a perfect mathematical loop */
+.image-set {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap);
+  padding-bottom: var(--gap); /* Must match gap for perfectly seamless looping */
+}
+
+.image-set img {
+  width: var(--image-size);
+  height: calc(var(--image-size) * 1.5); /* Vertical aspect ratio */
+  object-fit: cover;
+  border-radius: 8px;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.6);
+}
+
+/* 
+  Because there are two identical .image-set elements, 
+  shifting the track up by exactly 50% lines the start of Set 2 
+  perfectly with where Set 1 began. 
+*/
+@keyframes scroll {
+  0% {
+    transform: translateY(0);
+  }
+  100% {
+    transform: translateY(-50%);
+  }
+}
