@@ -37,7 +37,6 @@
             padding: 0;
             box-sizing: border-box;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            
         }
         /* MMM corposlop fonts */
         :root {
@@ -58,6 +57,7 @@
 
             --heading-font: 'Iceberg', cursive, sans-serif;
             --rubik-pixels : 'Rubik Pixels', cursive;
+            --Geneva : Geneva,comic-sans;
             --body-font: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
         /*advanced science stuff yall wont understand*/
@@ -82,6 +82,7 @@
             letter-spacing: 1px;
             font-family: var(--heading-font); 
             line-height: 0.4;
+            
         }
         /*if i have to guess, this one is probably for the secondary colors*/
         .logo span {
@@ -125,7 +126,7 @@
             position: relative;
             overflow: hidden;
         }
-
+        
         /* Decorative background element */
         .hero::before {
             content: '';
@@ -141,10 +142,144 @@
         
         .hero-content {
             position: relative;
-            z-index: 3;
-            text-align: left;
+            z-index: 2;
+            top: 0%;
+            right: 0%;
+            left: 30%;
+            text-align: right;
+            min-width: 100vw;
+            margin-left: auto; 
+            margin-right: 0;
+            
         }
         
+        #loader-container 
+        {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background-color: #05050a;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            transition: opacity 0.8s ease, visibility 0.8s ease;
+        }
+        .loader-visual {
+            position: relative;
+            width: 120px;
+            height: 120px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .ring {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            border: 4px solid transparent;
+            border-top-color: var( --orange);
+            animation: spin 1.5s linear infinite;
+        }
+
+        .ring:nth-child(2) {
+            width: 80%;
+            height: 80%;
+            border-top-color: transparent;
+            border-right-color: var(--vibrant-bg);
+            animation: spin 1s linear infinite reverse;
+        }
+
+        .ring:nth-child(3) {
+            width: 50%;
+            height: 50%;
+            border-top-color: #000; /* Core dot placeholder */
+            border-bottom-color: var(--faint-orange-bg);
+            animation: spin 2s ease-in-out infinite;
+        }
+
+        .core {
+            width: 15px;
+            height: 15px;
+            background-color: var(--text-logo-hammer);
+            border-radius: 50%;
+            box-shadow: 0 0 20px var(--priary-color), 0 0 40px var(--dark-orange);
+            animation: pulse 1.5s ease-in-out infinite;
+        }
+
+        /* --- TEXT & PROGRESS --- */
+        .loader-text {
+            margin-top: 30px;
+            font-size: 1.2rem;
+            letter-spacing: 0.3em;
+            text-transform: uppercase;
+            color: var(--vibrant-bg);
+            text-shadow: 0 0 10px var(--dark-orange);
+            animation: textPulse 2s infinite;
+        }
+
+        .progress-bar-container {
+            width: 200px;
+            height: 4px;
+            background-color: var(--text-dark);
+            border-radius: 2px;
+            margin-top: 15px;
+            overflow: hidden;
+        }
+
+        .progress-bar {
+            width: 0%;
+            height: 100%;
+            background: linear-gradient(90deg, var(--priary-color) 0%, var(--secondary-theme) 100%);
+            box-shadow: 0 0 10px var(--text-logo-clanker);
+            transition: width 0.4s ease;
+        }
+
+        /* --- ANIMATION KEYFRAMES --- */
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(0.8); opacity: 0.5; }
+            50% { transform: scale(1.2); opacity: 1; }
+        }
+
+        @keyframes textPulse {
+            0%, 100% { opacity: 0.6; }
+            50% { opacity: 1; letter-spacing: 0.35em; }
+        }
+
+        /* --- STATE: LOADED (Triggered by JS) --- */
+        .loaded #loader-container {
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+        }
+
+        /* --- ACTUAL MAIN CONTENT --- */
+        #main-content {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 1s ease 0.5s, transform 1s ease 0.5s;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .loaded #main-content {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
         .right-trapezoid {
         /* Positioning it on the right side of the screen */
         position: fixed;
@@ -152,7 +287,7 @@
         right: 0;
         width: 100vw;
         height: 100vh; /* Full screen height */
-        z-index: 13;
+        z-index: -1;
         /* Give it a background color or gradient */
         background: linear-gradient(90deg, #ff9318 0%, #ff3c00 100%);
         
@@ -169,7 +304,10 @@
             letter-spacing: 1px;
             font-family: var(--heading-font); 
             line-height: 0.6;
-            z-index: 13;
+            z-index: 33;
+            
+            /* padding-right: 0;
+            width: 100vw; */
         }
 
         .hero h1 span {
@@ -179,15 +317,26 @@
             font-weight: 400;
             font-style : normal;
             line-height: -1.1;
-            z-index:14;
+            z-index:34;
         }
         .hero h1 second {
             color: var(--text-logo-hammer);
             font-family: var(--heading-font); 
             font-size: 3rem;
             line-height: 1.1;
-            z-index: 15;
+            z-index: 35;
         }
+        .hero subtitle{
+            color: var(--text-light);
+            font-family: var(--body-font);
+            font-size: 2.3rem;
+            font-weight: 400;
+            font-style : bold;
+            line-height: -1.1;
+            letter-spacing: -2px;
+            z-index:34;
+        }
+
         .hero p {
             font-size: 4rem;
             margin-bottom: 2.5rem;
@@ -361,9 +510,10 @@
             animation-duration: 8s; /* Total time to cross the screen */
             animation-iteration-count: infinite;
             animation-timing-function: linear;
-            z-index: -1;
+            z-index: -80;
             /* Initially hide images off-screen before animation starts */
-            transform: translate(-150px, 100vh) rotate(-45deg);
+            transform: translate(14vw,100vh) rotate(-57.5deg); 
+
         }
 
         /* 
@@ -383,54 +533,107 @@
 
         @keyframes conveyorLoop {
             0% {
-                transform: translate(-150px,100vh) rotate(-55deg); 
+                transform: translate(-4vw,100vh) rotate(-57.5deg); 
+                z-index: -100;
             }
             100% {
-                transform: translate(45vw,-600px) rotate(-55deg); 
+                transform: translate(57vw,-600px) rotate(-57.5deg); 
+                z-index: -100;
             }
         }
     </style>
 </head>
 <body>
 
-    <!-- <h1 id="message">my private schitzo hole</h1> -->
-   <div class="link-list">
-    <a href="https://play.tigersoul.anticlankerhammer.org/index.html">play the version of tigersoul itch io is too stingy to host</a>
-    <a href="big-stein.html">See jeffery epstein</a>
-    <a href="cube.html">See green cube</a>
-
-     <!-- Header Navigation -->
-    <header>
-        <div class="logo" style='text-align: right'>ANTI<span>CLANKER</span><second>HAMMER</second></div>
-        <nav>
-            <ul>
-                <li><a href="https://play.tigersoul.anticlankerhammer.org/index.html">Play Tigersoul</a></li>
-                <li><a href="big-stein.html">Book a flight...</a></li>
-                <li><a href="cube.html">Spinning cube</a></li>
-            </ul>
-        </nav>
-    </header>
-    
-    <body>
-         <section class="hero" id="home">
-        <div class="hero-content">
-            <br><br><h1>ANTI<br><span>CLANKER</span><br><second>HAMMER</second></h1>
-            <p>Explore my catalog of games, for free! <br> robots not included!</p>
-            <a href="#services" class="cta-btn">Explore Anti-bolt Architecture</a>
-            <a href="http://www.google.com" target="_blank"> <img src="https://picsum.photos/150?random=1" alt="Image 1" class="looping-image img1"></a>
-            <!-- <img src="https://picsum.photos/150?random=1" alt="Image 1" class="looping-image img1"> -->
-            <img src="https://picsum.photos/150?random=2" alt="Image 2" class="looping-image img2">
-            <img src="https://picsum.photos/150?random=3" alt="Image 3" class="looping-image img3">
-            <img src="https://picsum.photos/150?random=4" alt="Image 4" class="looping-image img4">
-            <img src="https://picsum.photos/150?random=5" alt="Image 5" class="looping-image img5">
-            <img src="https://picsum.photos/150?random=6" alt="Image 6" class="looping-image img6">
-            <img src="https://picsum.photos/150?random=7" alt="Image 7" class="looping-image img7">
-            <img src="https://picsum.photos/150?random=8" alt="Image 8" class="looping-image img8">
-            <!-- <img src="https://picsum.photos/150?random=9" alt="Image 9" class="looping-image img9"> -->
+    <div id="loader-container">
+        <div class="loader-visual">
+            <div class="ring"></div>
+            <div class="ring"></div>
+            <div class="ring"></div>
+            <div class="core"></div>
         </div>
-        <div class="right-trapezoid"></div>
-        </section>
-    </body>
-</div>
+        <div class="loader-text">Initializing</div>
+        <div class="progress-bar-container">
+            <div class="progress-bar" id="progress"></div>
+        </div>
+    </div>
+
+    <!-- 2. The Main Website Content -->
+    <main id="main-content">
+        <div class="link-list">
+        <a href="https://play.tigersoul.anticlankerhammer.org/index.html">play the version of tigersoul itch io is too stingy to host</a>
+        <a href="big-stein.html">See jeffery epstein</a>
+        <a href="cube.html">See green cube</a>
+
+        <!-- Header Navigation -->
+        <header>
+            <div class="logo" style='text-align: right'>ANTI<span>CLANKER</span><second>HAMMER</second></div>
+            <nav>
+                <ul>
+                    <li><a href="https://play.tigersoul.anticlankerhammer.org/index.html">Play Tigersoul</a></li>
+                    <li><a href="big-stein.html">Book a flight...</a></li>
+                    <li><a href="cube.html">Spinning cube</a></li>
+                </ul>
+            </nav>
+        </header>
+        
+        <body>
+            <section class="hero" id="home">
+            <div class="hero-content">
+                <br><br><h1>ANTI<br><span>CLANKER</span><br><second>HAMMER</second></h1>
+                <p><subtitle>Explore my catalog of games, for free! <br> robots not included!</subtitle></p>
+                <a href="#services" class="cta-btn">Explore Anti-bolt Architecture</a>
+                <div class="right-trapezoid"></div>
+                <a href="http://www.google.com" target="_blank"> <img src="https://picsum.photos/150?random=1" alt="Image 1" class="looping-image img1"></a>
+                <!-- <img src="https://picsum.photos/150?random=1" alt="Image 1" class="looping-image img1"> -->
+                <img src="https://picsum.photos/150?random=2" alt="Image 2" class="looping-image img2">
+                <img src="https://picsum.photos/150?random=3" alt="Image 3" class="looping-image img3">
+                <img src="https://picsum.photos/150?random=4" alt="Image 4" class="looping-image img4">
+                <img src="https://picsum.photos/150?random=5" alt="Image 5" class="looping-image img5">
+                <img src="https://picsum.photos/150?random=6" alt="Image 6" class="looping-image img6">
+                <img src="https://picsum.photos/150?random=7" alt="Image 7" class="looping-image img7">
+                <img src="https://picsum.photos/150?random=8" alt="Image 8" class="looping-image img8">
+                <!-- <img src="https://picsum.photos/150?random=9" alt="Image 9" class="looping-image img9"> -->
+            </div>
+            
+            </section>
+        </body>
+    </div>
+
+    </main>
+
+    <!-- 3. JavaScript to control behavior -->
+    <script>
+        // Simulate progress bar incrementing
+        const progress = document.getElementById('progress');
+        let width = 0;
+        
+        const interval = setInterval(() => {
+            if (width >= 100) {
+                clearInterval(interval);
+                
+                // Add the 'loaded' class to the body to trigger CSS transitions
+                setTimeout(() => {
+                    document.body.classList.add('loaded');
+                    // Re-enable scrolling if needed
+                    document.body.style.overflow = 'auto';
+                }, 200); // Slight delay after hitting 100% for visual satisfaction
+            } else {
+                // Randomly increment to make it feel "real"
+                width += Math.floor(Math.random() * 15) + 5;
+                if (width > 100) width = 100;
+                progress.style.width = width + '%';
+            }
+        }, 200); // Updates every 200ms
+
+        // Fallback: Ensure loader disappears even if interval quirks out
+        window.addEventListener('load', () => {
+            // If you want it to stop exactly when the page assets load natively,
+            // you would clear the interval and add the 'loaded' class here instead.
+        });
+    </script>
+
+    <!-- <h1 id="message">my private schitzo hole</h1> -->
+   
 </body>
 </html>
