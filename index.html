@@ -359,6 +359,7 @@
             animation-duration: 8s; /* Total time to cross the screen */
             animation-iteration-count: infinite;
             animation-timing-function: linear;
+            z-index: 1;
             /* Initially hide images off-screen before animation starts */
             transform: translate(-150px, 100vh) rotate(-45deg);
         }
@@ -380,10 +381,10 @@
 
         @keyframes conveyorLoop {
             0% {
-                transform: translate(-500px,100vh) rotate(-55deg); 
+                transform: translate(-300px,100vh) rotate(-55deg); 
             }
             100% {
-                transform: translate(29vw,-600px) rotate(-55deg); 
+                transform: translate(40vw,-600px) rotate(-55deg); 
             }
         }
     </style>
