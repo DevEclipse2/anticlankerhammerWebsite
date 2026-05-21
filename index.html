@@ -36,10 +36,17 @@
             if (!room) return alert("Enter or Create a room code!");
 
             // Initialize Pusher
-            pusher = new Pusher(PUSHER_KEY, { cluster: PUSHER_CLUSTER });
-            
+            const pusher = new Pusher(PUSHER_KEY, {
+            cluster: PUSHER_CLUSTER,
+            channelAuthorization: {
+                endpoint: 'https://your-worker-url.workers.dev', // The URL of your deployed worker
+                transport: 'ajax'
+            }
+        });
+
+        // Now you can safely subscribe to presence channels
+        const channel = pusher.subscribe('presence-' + roomCode);
             // Subscribe to the "room"
-            channel = pusher.subscribe('presence-' + room);
 
             channel.bind('pusher:subscription_succeeded', () => {
                 document.getElementById('status').innerText = "Connected to room: " + room;
