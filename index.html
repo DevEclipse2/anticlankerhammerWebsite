@@ -16,16 +16,29 @@
             const WORKER_URL = "https://test-worker.misterjavaeclipse.workers.dev";//put in worker url first
 
             const btn = document.getElementById("testWorker");
-
+            btn.addEventListener("click", sayHello);
             // 2. Define the function
-            function sayHello() {
+            function sayHello() 
+            {
+            alert("button clicked");
             console.log("Button was clicked!");
             testWorker();
             }
 
-            // 3. Attach the event listener
-            btn.addEventListener("click", sayHello);
+            //contacts the worker
+            console.log("button pressed!");
+                try {
+                const response = await fetch(WORKER_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ message: 'Hello from HTML!' })
+                });
 
+                const data = await response.json();
+                console.log('Worker replied:', data);
+                } catch (error) {
+                console.error('Error:', error);
+                }
             testWorker()
             {
                 console.log("button pressed!");
