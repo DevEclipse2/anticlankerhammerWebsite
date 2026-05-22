@@ -1,0 +1,15 @@
+worker job
+user send room creation request and uuid
+worker get room creation request and uuid
+worker generate room code and makes a unique hash to create a channel for pusher
+worker send user generated room code
+worker give access token
+
+user send room join request , room code, and uuid
+worker get room join request and room code
+worker checks against database for hash.
+ if hash is valid, return pusher channel name and new acsess token
+
+user send publish request with token and data
+worker check if token is valid
+worker broadcast message if it is
