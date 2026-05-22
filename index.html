@@ -1,61 +1,36 @@
 <!DOCTYPE html>
 <html>
-<head>
-    <title>Multiplayer Game Test</title>
-    <script src="https://js.pusher.com/8.2.0/pusher.min.js"></script>
-</head>
-<body>
-    <h2>Multiplayer Game Test</h2>
-    
-    <div>
-        <input type="text" id="roomCode" placeholder="Enter Room Code">
-        <button onclick="joinRoom()">Join Room</button>
-        <button onclick="createRoom()" style="margin-left: 10px;">Create/Host Room</button>
-    </div>
+    <head>
+        <title>
+            gonna run a few simple tests
+            
+        </title>
+    </head>
+    <body>
+        <h1>Multiplayer thing</h1>
+        <h2>SEEK ROOM</h2>
+        <button onclick="testWorker()">Message worker</button>
+        //this button will message a worker and do stuff
+        <h2>CREATE ROOM</h2>
+        <script>
+            const WORKER_URL = "https://test-worker.misterjavaeclipse.workers.dev";//put in worker url first
 
-    <p id="status">Not connected</p>
+            testWorker()
+            {
+                console.log("button pressed!");
+                try {
+                const response = await fetch(WORKER_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ message: 'Hello from HTML!' })
+                });
 
-    <script>
-        //strictly for testing never expose the fucking api keys dimwit
-        const PUSHER_KEY = 'YOUR_PUSHER_KEY';
-        const PUSHER_CLUSTER = 'YOUR_PUSHER_CLUSTER';
-
-        let pusher;
-        let channel;
-
-        // Function to create a room
-        function createRoom() {
-            const newCode = Math.random().toString(36).substring(2, 6).toUpperCase();
-            document.getElementById('roomCode').value = newCode;
-            alert("Room Created! Share this code: " + newCode);
-            joinRoom(); // Automatically join the room you created
-        }
-
-        function joinRoom() {
-            const room = document.getElementById('roomCode').value.toUpperCase();
-            if (!room) return alert("Enter or Create a room code!");
-
-            // Initialize Pusher
-            const pusher = new Pusher(PUSHER_KEY, {
-            cluster: PUSHER_CLUSTER,
-            channelAuthorization: {
-                endpoint: 'https://your-worker-url.workers.dev', // The URL of your deployed worker
-                transport: 'ajax'
+                const data = await response.json();
+                console.log('Worker replied:', data);
+                } catch (error) {
+                console.error('Error:', error);
+                }
             }
-        });
-
-        // Now you can safely subscribe to presence channels
-        const channel = pusher.subscribe('presence-' + roomCode);
-            // Subscribe to the "room"
-
-            channel.bind('pusher:subscription_succeeded', () => {
-                document.getElementById('status').innerText = "Connected to room: " + room;
-            });
-
-            channel.bind('game-event', (data) => {
-                console.log("Event received:", data);
-            });
-        }
-    </script>
-</body>
+        </script>
+    </body>
 </html>
