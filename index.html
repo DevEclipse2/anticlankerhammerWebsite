@@ -27,21 +27,23 @@
 
             //contacts the worker
             console.log("button pressed!");
-                try {
+            try {
+                (async() => {
                 const response = await fetch(WORKER_URL, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ message: 'Hello from HTML!' })
                 });
-
                 const data = await response.json();
                 console.log('Worker replied:', data);
-                } catch (error) {
-                console.error('Error:', error);
-                }
+                })();
+            } catch (error) {
+            console.error('Error:', error);
+            }
             async function testWorker()
             {
                 console.log("button pressed!");
+                (async () => {
                 try {
                 const response = await fetch(WORKER_URL, {
                     method: 'POST',
@@ -49,14 +51,13 @@
                     body: JSON.stringify({ message: 'Hello from HTML!' })
                 });
 
-                (async () => {
+               
                     const data = await response.json();
-                    console.log('Worker replied:', data);
-                    
-                })();
+                    console.log('Worker replied:', data);                
                 } catch (error) {
                     console.error('Error:', error);
-                    }
+                }
+                })();
             }
         </script>
     </body>
