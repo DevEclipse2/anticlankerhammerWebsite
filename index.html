@@ -1,0 +1,642 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- Primary Meta Tags -->
+<title>CLANKER DESTRUCTION</title>
+<meta name="description" content="in case of machine consciousness, break glass">
+
+<!-- Open Graph / Facebook -->
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://www.anticlankerhammer.org">
+<meta property="og:title" content="CLANKER CONTINGENCY">
+<meta property="og:description" content="in case of machine consciousness, break glass">
+<meta property="og:image" content="https://www.anticlankerhammer.org/thumbnail.jpeg">
+
+<!-- Twitter -->
+<meta property="twitter:card" content="summary_large_image">
+<meta property="twitter:url" content="https://www.anticlankerhammer.org">
+<meta property="twitter:title" content="CLANKER CONTINGENCY">
+<meta property="twitter:description" content="in case of machine consciousness, break glass">
+<meta property="twitter:image" content="https://www.anticlankerhammer.org/thumbnail.jpeg"> 
+
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ANTI CLANKER HAMMER | Home to free, human made games, software and other cool stuff</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Iceberg&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Rubik+Pixels&display=swap" rel="stylesheet">
+    <style>
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        /* MMM corposlop fonts */
+        :root {
+            --priary-color: #E34234;
+            --secondary-theme: #E82514;
+            --dark-orange: #d3480c;
+            --orange: #FF6B35;
+            --vibrant-bg: #f09d38;
+            --dark-bg: #1f1d1b;
+            --faint-orange-bg: #ffe1a4; /* for a little spazz*/
+            --text-dark: #272727;
+            --text-light: #f1efe2;
+            --text-logo: #edfffd;
+            --text-logo-anti: #ffffff;
+            --text-logo-clanker: #4a3d18;
+            --text-logo-hammer: #fff3ae;
+            --text-muted: #807b6e;  
+
+            --heading-font: 'Iceberg', cursive, sans-serif;
+            --rubik-pixels : 'Rubik Pixels', cursive;
+            --Geneva : Geneva,comic-sans;
+            --body-font: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        /*advanced science stuff yall wont understand*/
+        header {
+            background-color: var(--vibrant-bg);
+            padding: 1.5rem 3%;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 5px solid var(--secondary-theme);
+        }
+
+        .logo {
+            color: var(--text-logo-anti);
+            font-size: 3.5rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-family: var(--heading-font); 
+            line-height: 0.4;
+            
+        }
+        /*if i have to guess, this one is probably for the secondary colors*/
+        .logo span {
+            color: var(--text-logo-clanker);
+            font-family: var(--rubik-pixels);
+            font-weight: 400;
+            font-style : normal;
+        }
+        .logo second {
+            color: var(--text-logo-hammer);
+            font-family: var(--heading-font); 
+
+        }
+
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+        }
+
+        nav a {
+            color: var(--text-light);
+            text-decoration: none;
+            font-size: 0.95rem;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+
+        nav a:hover {
+            color: var(--orange);
+        }
+        .hero {
+            background: linear-gradient(135deg, var(--dark-bg) 60%, #2a2a2a 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: left;
+            justify-content: flex-end; 
+            /* padding: 0 20%; */
+            padding-top: 180px; /* Offset for fixed header */
+            color: var(--text-light);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        /* Decorative background element */
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: -20%;
+            right: -10%;
+            width: 0px;
+            height: 600px;
+            background: radial-gradient(circle, rgba(227,66,52,0.15) 0%, rgba(255,107,53,0) 70%);
+            border-radius: 50%;
+            pointer-events: none;
+        }
+        
+        .hero-content {
+            position: relative;
+            z-index: 2;
+            top: 15vw;
+            text-align: right;
+            min-height: 120vh;
+            min-width: 35vw;
+            margin-left: auto;
+            margin-right: 5vw;
+        }
+        
+        #loader-container 
+        {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background-color: #05050a;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            transition: opacity 0.8s ease, visibility 0.8s ease;
+        }
+        .loader-visual {
+            position: relative;
+            width: 120px;
+            height: 120px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .ring {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            border: 4px solid transparent;
+            border-top-color: var( --orange);
+            animation: spin 1.5s linear infinite;
+        }
+
+        .ring:nth-child(2) {
+            width: 80%;
+            height: 80%;
+            border-top-color: transparent;
+            border-right-color: var(--vibrant-bg);
+            animation: spin 1s linear infinite reverse;
+        }
+
+        .ring:nth-child(3) {
+            width: 50%;
+            height: 50%;
+            border-top-color: #000; /* Core dot placeholder */
+            border-bottom-color: var(--faint-orange-bg);
+            animation: spin 2s ease-in-out infinite;
+        }
+
+        .core {
+            width: 15px;
+            height: 15px;
+            background-color: var(--text-logo-hammer);
+            border-radius: 50%;
+            box-shadow: 0 0 20px var(--priary-color), 0 0 40px var(--dark-orange);
+            animation: pulse 1.5s ease-in-out infinite;
+        }
+
+        /* --- TEXT & PROGRESS --- */
+        .loader-text {
+            margin-top: 30px;
+            font-size: 1.2rem;
+            letter-spacing: 0.3em;
+            text-transform: uppercase;
+            color: var(--vibrant-bg);
+            text-shadow: 0 0 10px var(--dark-orange);
+            animation: textPulse 2s infinite;
+        }
+
+        .progress-bar-container {
+            width: 200px;
+            height: 4px;
+            background-color: var(--text-dark);
+            border-radius: 2px;
+            margin-top: 15px;
+            overflow: hidden;
+        }
+
+        .progress-bar {
+            width: 0%;
+            height: 100%;
+            background: linear-gradient(90deg, var(--priary-color) 0%, var(--secondary-theme) 100%);
+            box-shadow: 0 0 10px var(--text-logo-clanker);
+            transition: width 0.4s ease;
+        }
+
+        /* --- ANIMATION KEYFRAMES --- */
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(0.8); opacity: 0.5; }
+            50% { transform: scale(1.2); opacity: 1; }
+        }
+
+        @keyframes textPulse {
+            0%, 100% { opacity: 0.6; }
+            50% { opacity: 1; letter-spacing: 0.35em; }
+        }
+
+        /* --- STATE: LOADED (Triggered by JS) --- */
+        .loaded #loader-container {
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+        }
+
+        /* --- ACTUAL MAIN CONTENT --- */
+        #main-content {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 1s ease 0.5s, transform 1s ease 0.5s;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .loaded #main-content {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .right-trapezoid {
+        /* Positioning it on the right side of the screen */
+        position: fixed;
+        top: 55vh;
+        right: 0;
+        width: 100vw;
+        height: 100vh; /* Full screen height */
+        z-index: -1;
+        /* Give it a background color or gradient */
+        background: linear-gradient(90deg, #ff9318 0%, #ff3c00 100%);
+        padding-top: 10%;
+        /* The magic: Top-Left, Top-Right, Bottom-Right, Bottom-Left */
+        clip-path: polygon(65% 0%, 100% 0%, 100% 100%, 30% 100%);
+        }
+
+        .hero h1 {
+            
+          margin-left: 60vw;
+          margin-right: 0vw;
+          color: var(--text-logo-anti);
+          font-size: 2.5rem;
+          font-weight: 800;
+          text-transform: uppercase;
+          letter-spacing: 1px;
+          line-height: 1.2;
+          font-family: var(--heading-font); 
+          z-index: 33;
+          padding-top: 2%;
+          /* padding-right: 0;
+          width: 100vw; */
+        }
+
+        .hero h1 span {
+            color: var(--text-logo-clanker);
+            font-family: var(--body-font);
+            font-size: 4rem;
+            font-weight: 400;
+            font-style : bold;
+            text-decoration: underline;
+            line-height: 1.1;
+            z-index:34;
+        }
+        .hero h1 second {
+            color: var(--text-logo-hammer);
+            font-family: var(--heading-font); 
+            font-size: 5rem;
+            line-height: 1.1;
+            z-index: 35;
+        }
+        .hero subtitle{
+            color: var(--text-light);
+            font-family: var(--body-font);
+            font-size: 2rem;
+            font-weight: 400;
+            font-style : bold;
+            line-height: -1.1;
+            letter-spacing: -2px;
+            z-index:34;
+            
+        }
+
+        .hero p {
+            font-size: 4rem;
+            margin-bottom: 2.5rem;
+            color: #CCCCCC;
+            margin-left: 60vw;
+            margin-right: 0vw;
+        }
+        .hero p {
+            font-size: 1.2rem;
+            margin-bottom: 2.5rem;
+            color: #CCCCCC;
+        }
+
+        /* Buttons */
+        .cta-btn {
+            display: inline-block;
+            background: linear-gradient(135deg, var(--vibrant-bg) 0%, var(--dark-orange) 100%);
+            color: var(--text-light);
+            padding: 0.8rem 2rem;
+            border-radius: 4px;
+            text-decoration: none;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            box-shadow: 0 4px 15px rgba(227, 66, 52, 0.3);
+        }
+
+        .cta-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(88, 41, 23, 0.671);
+        }
+
+        /* Features/Services Section */
+        .services {
+            padding: 7rem 10%;
+            background-color: var(--light-bg);
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 2.5rem;
+            margin-bottom: 4rem;
+            position: relative;
+            font-weight: 700;
+        }
+
+        .section-title::after {
+            content: '';
+            display: block;
+            width: 60px;
+            height: 4px;
+            background-color: var(--vermillion);
+            margin: 10px auto 0 auto;
+            border-radius: 2px;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2.5rem;
+        }
+
+        .card {
+            background-color: var(--text-light);
+            padding: 2.5rem;
+            border-radius: 6px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+            transition: transform 0.3s ease, border-top 0.2s ease;
+            border-top: 4px solid transparent;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            border-top: 4px solid var(--orange);
+        }
+
+        .card-icon {
+            width: 50px;
+            height: 50px;
+            background-color: rgba(255, 107, 53, 0.1);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .card-icon svg {
+            fill: var(--secondary-theme);
+            width: 24px;
+            height: 24px;
+        }
+    
+        .card h3 {
+            font-size: 1.4rem;
+            margin-bottom: 1rem;
+            color: var(--dark-bg);
+        }
+
+        .card p {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+        }
+
+        /* Footer */
+        footer {
+            background-color: var(--dark-bg);
+            color: var(--text-light);
+            width: 100vw;
+            padding: 3rem 10% 2rem 10%;
+            text-align: center;
+            border-top: 1px solid #333;
+        }
+
+        .footer-content {
+            margin-bottom: 2rem;
+        }
+
+        .footer-content p {
+            color: #999;
+            font-size: 0.9rem;
+        }
+
+        .copyright {
+            font-size: 0.85rem;
+            color: #666;
+            border-top: 1px solid #2A2A2A;
+            padding-top: 1.5rem;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            header {
+                padding: 1rem 5%;
+            }
+            nav {
+                display: none; /* Can be expanded into a burger menu */
+            }
+            .hero {
+                padding: 0 5%;
+                padding-top: 80px;
+                text-align: right;
+            }
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+            .services {
+                padding: 5rem 5%;
+            }
+        }
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #f0f2f5;
+            overflow-x: hidden; /* Hides images when they go off-screen */
+            display: flex;
+            align-items: center; 
+            height: 100vh;
+        }
+
+        .conveyor-container {
+            width: 100vw;
+            position: relative;
+            height: 100vh; /* Matches the height of the images */
+        }
+
+        .looping-image {
+            width: 150px; 
+            height: auto;
+            position: absolute; /* Allows images to layer and move independently */
+            left: 0;
+            /* Base animation settings */
+            animation-name: conveyorLoop;
+            animation-duration: 8s; /* Total time to cross the screen */
+            animation-iteration-count: infinite;
+            animation-timing-function: linear;
+            z-index: -80;
+            /* Initially hide images off-screen before animation starts */
+            transform: translate(14vw,100vh) rotate(-57.5deg); 
+
+        }
+
+        /* 
+           STAGGERING THE IMAGES 
+           With an 8-second total duration and 8 images, 
+           we delay each one by exactly 1 second (8s / 8 = 1s spacing).
+        */
+        .img1 { animation-delay: 0s; }
+        .img2 { animation-delay: 1s; }
+        .img3 { animation-delay: 2s; }
+        .img4 { animation-delay: 3s; }
+        .img5 { animation-delay: 4s; }
+        .img6 { animation-delay: 5s; }
+        .img7 { animation-delay: 6s; }
+        .img8 { animation-delay: 7s; }
+        /* .img9 { animation-delay: 8s; } */
+
+        @keyframes conveyorLoop {
+            0% {
+                transform: translate(-8vw,100vh) rotate(-58deg); 
+                z-index: -100;
+            }
+            100% {
+                transform: translate(61vw,-600px) rotate(-58deg); 
+                z-index: -100;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div id="loader-container">
+        <div class="loader-visual">
+            <div class="ring"></div>
+            <div class="ring"></div>
+            <div class="ring"></div>
+            <div class="core"></div>
+        </div>
+        <div class="loader-text">Initializing</div>
+        <div class="progress-bar-container">
+            <div class="progress-bar" id="progress"></div>
+        </div>
+    </div>
+    <header>
+        <div class="logo" style='text-align: right'>ANTI<span>CLANKER</span><second>HAMMER</second></div>
+        <nav>
+            <ul>
+                <li><a href="https://play.tigersoul.anticlankerhammer.org/index.html">Play Tigersoul</a></li>
+                <li><a href="join-game.html">join an online game!</a></li>
+                <li><a href="subpages/test/cube.html">Spinning cube</a></li>
+            </ul>
+        </nav>
+    </header>
+    <!-- 2. The Main Website Content -->
+    <main id="main-content">
+        <body>
+            <section class="hero" id="home">
+            <div class="hero-content">
+                <br><br><h1>Something you always<br><span>Needed</span></h1>
+                <p><subtitle>(that you didn't know you wanted)<br> robots not included!</subtitle></p>
+                <a href="#services" class="cta-btn">Explore Anti-bolt Architecture</a>
+                <a href="subpages/test/construction.html" target="_blank"> <img src="/main-page-thumbnails/CFDS.jpeg" alt="Cheesecake factory defense shift" class="looping-image img1"></a>
+                <a href="subpages/test/construction.html" target="_blank"> <img src="/main-page-thumbnails/BiteByByte.jpeg" alt="BitebyBite" class="looping-image img2"></a>
+                <a href="subpages/games/paranoia/paranoia.html" target="_blank"> <img src="/main-page-thumbnails/RadKilledTheDove.jpeg" alt="Radiation killed the dove" class="looping-image img3"></a>
+                <a href="subpages/games/paranoia/paranoia.html" target="_blank"> <img src="/main-page-thumbnails/paranoia.jpeg" alt="Fear. Terror. Hate" class="looping-image img4"></a>
+                <a href="subpages/test/construction.html" target="_blank"> <img src="/main-page-thumbnails/JetsamCover.jpeg" alt="Flotsam and Jetsam" class="looping-image img5"></a>
+                <a href="subpages/games/paranoia/paranoia.html" target="_blank"> <img src="/main-page-thumbnails/paranoia-back.jpeg" alt="PRESS THE BUTTON. OBEY" class="looping-image img6"></a>
+                <a href="subpages/test/construction.html" target="_blank"> <img src="/main-page-thumbnails/JetsamPoster.jpeg" alt="play Jetsam for free here" class="looping-image img7"></a>
+                <a href="https://play.tigersoul.anticlankerhammer.org/index.html" target="_blank"> <img src="/main-page-thumbnails/Tigersoul.jpeg" alt="Play tigersoul in glorious HD" class="looping-image img8"></a>
+                <div class="right-trapezoid"></div>
+            </div>
+            
+            </section>
+        </body>
+
+        <footer>
+            <div class="footer-content">
+                <div class="logo" style="margin-bottom: 1rem;">ANTI<br><br><span>CLANKER</span><br><br><second>HAMMER</second></div>
+                <p>For HUMAN MADE games, software, and art</p>
+                <p>For enquiries : email azzyazimuth@anticlankerhammer.org</p>
+            </div>
+            <div class="copyright">
+                &copy; 2026 BitebyBite. All lefts and rights reserved. Built by humans.
+            </div>
+        </footer>
+    </div>
+
+    </main>
+
+    <!-- 3. JavaScript to control behavior -->
+    <script>
+        // Simulate progress bar incrementing
+        const progress = document.getElementById('progress');
+        let width = 0;
+        
+        const interval = setInterval(() => {
+            if (width >= 100) {
+                clearInterval(interval);
+                
+                // Add the 'loaded' class to the body to trigger CSS transitions
+                setTimeout(() => {
+                    document.body.classList.add('loaded');
+                    // Re-enable scrolling if needed
+                    document.body.style.overflow = 'auto';
+                }, 200); // Slight delay after hitting 100% for visual satisfaction
+            } else {
+                // Randomly increment to make it feel "real"
+                width += Math.floor(Math.random() * 15) + 5;
+                if (width > 100) width = 100;
+                progress.style.width = width + '%';
+            }
+        }, 200); // Updates every 200ms
+
+        // Fallback: Ensure loader disappears even if interval quirks out
+        window.addEventListener('load', () => {
+            // If you want it to stop exactly when the page assets load natively,
+            // you would clear the interval and add the 'loaded' class here instead.
+        });
+    </script>
+
+    <!-- <h1 id="message">my private schitzo hole</h1> -->
+   
+</body>
+</html>
