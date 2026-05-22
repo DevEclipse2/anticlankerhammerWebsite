@@ -1,0 +1,14 @@
+for the database
+store channel name and current users. 
+
+worker scheduled check every 5 minutes.
+if last request is more than 3 minutes ago,it shuts down and kicks all users in the channel.
+
+join request
+redirect to game page, with arguments, subscribe to channel, query database 
+
+
+
+
+new cloudflare persistent objects
+100,000 messages 
