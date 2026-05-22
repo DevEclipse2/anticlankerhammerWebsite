@@ -30,15 +30,18 @@ async function submitCode()
             case 0:
                 alert("incorrect room code length");
                 canPress = true;
+                text.textContent = original;
                 return;
             case 1:
                 alert("room codes do not include special characters!");
                 canPress = true;
+                text.textContent = original;
                 return;
             case 2:
                 //the code is good
                 break;
             default:
+                text.textContent = original;
                 alert("something bad happened and now i don't know anymore");
                 canPress = true;
                 break;
@@ -63,6 +66,7 @@ async function submitCode()
             console.log('Worker replied:', data);
         } catch (error) {
             alert('Error:', error);
+            canPress = true;
         }
     }
     else
