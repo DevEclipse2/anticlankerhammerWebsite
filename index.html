@@ -9,11 +9,22 @@
     <body>
         <h1>Multiplayer thing</h1>
         <h2>SEEK ROOM</h2>
-        <button onclick="testWorker()">Message worker</button>
+        <button id="testWorker">Test hot blondees in your area</button>
         //this button will message a worker and do stuff
         <h2>CREATE ROOM</h2>
         <script>
             const WORKER_URL = "https://test-worker.misterjavaeclipse.workers.dev";//put in worker url first
+
+            const btn = document.getElementById("testWorker");
+
+            // 2. Define the function
+            function sayHello() {
+            console.log("Button was clicked!");
+            testWorker();
+            }
+
+            // 3. Attach the event listener
+            btn.addEventListener("click", sayHello);
 
             testWorker()
             {
