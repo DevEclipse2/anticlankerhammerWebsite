@@ -49,11 +49,14 @@
                     body: JSON.stringify({ message: 'Hello from HTML!' })
                 });
 
-                const data = await response.json();
-                console.log('Worker replied:', data);
+                (async () => {
+                    const data = await response.json();
+                    console.log('Worker replied:', data);
+                    
+                })();
                 } catch (error) {
-                console.error('Error:', error);
-                }
+                    console.error('Error:', error);
+                    }
             }
         </script>
     </body>
