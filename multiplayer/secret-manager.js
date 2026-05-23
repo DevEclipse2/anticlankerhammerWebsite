@@ -26,9 +26,8 @@ export default {
         
         if(request.o == "join")
         {
-            
+            joinRoom();
         }
-    
         return new Response(JSON.stringify({ message: "Access granted" }), {
         status: 200,
         headers: corsHeaders,
@@ -50,3 +49,12 @@ export default {
 async function roomCheck() {
 // if last request is more than 3 minutes ago,it shuts down and kicks all users in the channel.
 }
+async function createRoom   (){
+  
+}
+async function joinRoom     ()
+{
+    //first queries database
+
+}
+async function leaveRoom    (){}
