@@ -1,0 +1,344 @@
+Building a true Peer-to-Peer (P2P) WebGL game using WebRTC and Cloudflare is an excellent architectural choice. It keeps your hosting bill at zero since Cloudflare distributes your static client files, and players exchange data directly with each other without a centralized game server.
+
+However, you need to navigate a critical constraint of WebRTC: Peers cannot discover each other automatically. Before they can connect directly, they must trade network data (Offers, Answers, and ICE candidates). This requires a temporary middleman called a Signaling Server.
+
+Here is the blueprint for how this pipeline operates and how to build it:
+
+🛠️ The Architecture
+                       [ 1. WebGL Game Hosted on Pages ]
+                               /               \
+                       Player A                 Player B
+                          \                       /
+             [ 2. Handshake ]                   [ 2. Handshake ]
+                            \                   /
+                           [ Cloudflare Worker ] (Signaling)
+                                    ||
+                             [ Durable Object / KV ]
+                                    ||
+                          ( 3. Direct P2P Pipe )
+                          Player A <=========> Player B
+1. The Web Host: Cloudflare Pages
+You will build your Unity game as a standard WebGL project and host it on Cloudflare Pages.
+
+Why: It is free, distributed globally across Cloudflare's edge network, and gives you an HTTPS URL out of the box (which WebRTC requires for security).
+
+Unity Setup: Ensure your WebGL Compression settings (Brotli/Gzip) match Cloudflare's requirements, or simply disable decompression fallback in Unity and let Cloudflare handle the file delivery.
+
+2. The Matchmaker: Cloudflare Workers
+Because you are using Cloudflare, you don't need a heavy Node.js signaling backend. You can use a lightweight Cloudflare Worker paired with Durable Objects (or an ultra-fast KV/D1 database store) to act as your room and signaling lobby.
+
+Player A opens the game, creates a room, and sends their WebRTC "Offer" token to the Cloudflare Worker.
+
+The Worker stores this offer inside a temporary room ID.
+
+Player B joins the game, inputs the room ID, requests the offer from the Worker, and sends back an "Answer" token.
+
+Once both tokens are exchanged through the Worker, the handshake is complete. The Worker steps away completely.
+
+3. The Unity Implementation: JavaScript Native Bridge
+The official com.unity.webrtc package does not work inside WebGL builds because it relies on native C++ binaries. For WebGL, you must leverage the browser's native JavaScript RTCPeerConnection API.
+
+You do this by creating a .jslib plugin in Unity to bridge C# data into the browser.
+
+The JavaScript Plugin (WebGLWebRTC.jslib)
+Drop this file into your Unity project under Assets/Plugins/WebGLWebRTC.jslib. It manages the browser's native WebRTC DataChannels:
+
+JavaScript
+mergeInto(LibraryManager.library, {
+    
+    InitWebRTC: function(isHost) {
+        window.webrtcPeer = new RTCPeerConnection({
+            iceServers: [{ urls: 'stun:stun.l.google.com:19302' }] // Free STUN Server for NAT punching
+        });
+
+        // If Host, we create the Data Channel
+        if (isHost) {
+            window.gameChannel = window.webrtcPeer.createDataChannel("gameData");
+            setupChannelEvents(window.gameChannel);
+        } else {
+            // If Client, we wait for the host's channel to arrive
+            window.webrtcPeer.ondatachannel = function(event) {
+                window.gameChannel = event.channel;
+                setupChannelEvents(window.gameChannel);
+            };
+        }
+
+        // Gather ICE network candidates to share via your Cloudflare Worker
+        window.webrtcPeer.onicecandidate = function(event) {
+            if (event.candidate) {
+                // Send this candidate string back to Unity to upload to Cloudflare
+                SendMessage('NetworkManager', 'OnIceCandidateFound', JSON.stringify(event.candidate));
+            }
+        };
+
+        function setupChannelEvents(channel) {
+            channel.onopen = function() { SendMessage('NetworkManager', 'OnPeerConnected'); };
+            channel.onmessage = function(e) { SendMessage('NetworkManager', 'OnMessageReceived', e.data); };
+        }
+    },
+
+    SendNetworkMessage: function(messageStr) {
+        var msg = UTF8ToString(messageStr);
+        if (window.gameChannel && window.gameChannel.readyState === "open") {
+            window.gameChannel.send(msg);
+        }
+    }
+});
+The C# Interface (WebRTCBridge.cs)
+Attach this script to a GameObject named exactly NetworkManager in your Unity scene to receive data coming back from the browser:
+
+C#
+using System.Runtime.InteropServices;
+using UnityEngine;
+
+public class WebRTCBridge : MonoBehaviour
+{
+    // Link to our .jslib functions
+    [DllImport("__Internal__")]
+    private static extern void InitWebRTC(bool isHost);
+
+    [DllImport("__Internal__")]
+    private static extern void SendNetworkMessage(string messageStr);
+
+    public void StartAsHost()
+    {
+        #if !UNITY_EDITOR && UNITY_WEBGL
+        InitWebRTC(true);
+        #endif
+    }
+
+    // Called automatically from JS when network data arrives
+    public void OnMessageReceived(string message)
+    {
+        Debug.Log("Data received from peer: " + message);
+        // Handle your custom game serialization/input sync here
+    }
+
+    public void OnPeerConnected()
+    {
+        Debug.Log("P2P Pipe established via WebRTC!");
+    }
+}
+⚡ The Architectural Hurdles to Keep in Mind
+No Editor Testing: Because .jslib scripts only run inside actual browsers, you cannot hit "Play" in the Unity Editor to test connections. You will need to build the WebGL project locally or upload to Cloudflare Pages to test network code.
+
+Symmetric NATs (The 20% failure rate): Standard WebRTC uses free STUN servers (like Google's in the script above) to find a player's public IP address. However, if a player is behind a strict corporate firewall or a complex home router configuration (Symmetric NAT), STUN will fail to establish a direct connection. To fix this for 100% of players, you would need to rent/deploy a TURN relay server (using an open-source option like COTURN), which routes data through a server fallback when direct P2P fails.
+
+Want to look at how to build the Cloudflare Worker signaling script?
+
+
+To build a true, stateful WebRTC room signaling system on Cloudflare without standing up a heavy database, the best tool for the job is Cloudflare Workers combined with Durable Objects.
+
+Durable Objects allow you to create a tiny, isolated instance of code and storage specifically for one room. When all players leave, the room instantly cleans itself up, and you pay absolutely zero idle server costs.
+
+Here is a complete, production-ready TypeScript implementation for your WebGL matchmaking lobby.
+
+📂 Project Structure
+Run npm create cloudflare@latest to start a new project, select a TypeScript Worker, and use this file layout:
+
+Plaintext
+my-webrtc-signaling/
+├── wrangler.toml         # Cloudflare configuration
+└── src/
+    └── index.ts          # Core Worker and Durable Object code
+1. The Configuration (wrangler.toml)
+Your configuration file handles binding your main Worker routing to the persistent state of the Durable Object.
+
+Ini, TOML
+name = "webrtc-signaling-lobby"
+main = "src/index.ts"
+compatibility_date = "2026-05-22"
+
+# 1. Define the Durable Object binding so the Worker can talk to it
+[durable_objects]
+bindings = [
+  { name = "ROOM_LOBBY", class_name = "RoomLobby" }
+]
+
+# 2. Tell Cloudflare where to persist the Durable Object storage tables
+[[migrations]]
+tag = "v1"
+new_classes = ["RoomLobby"]
+2. The Core Script (src/index.ts)
+This single script contains two parts: the Gateway Worker (which handles HTTP REST paths like /join and /get-room) and the Durable Object Class (which acts as the stateful memory block for individual rooms).
+
+TypeScript
+export interface Env {
+  ROOM_LOBBY: DurableObjectNamespace;
+}
+
+interface PeerData {
+  role: "host" | "client";
+  offer?: string;
+  answer?: string;
+  iceCandidates: string[];
+}
+
+// ==========================================
+// 1. GATEWAY WORKER (The Main Router)
+// ==========================================
+export default {
+  async fetch(request: Request, env: Env): Promise<Response> {
+    const url = new URL(request.url);
+    const pathSegments = url.pathname.split("/").filter(Boolean);
+    
+    // Clean up CORS options preflight requests from the browser
+    if (request.method === "OPTIONS") {
+      return new Response(null, { headers: corsHeaders() });
+    }
+
+    // Path format: /api/room/:roomId/:action
+    if (pathSegments[0] === "api" && pathSegments[1] === "room" && pathSegments[2]) {
+      const roomId = pathSegments[2];
+      
+      // Derive a unique, global ID based on the text string of the Room Name
+      const doId = env.ROOM_LOBBY.idFromName(roomId);
+      // Fetch a live stub (instance handle) for that specific room's object
+      const roomStub = env.ROOM_LOBBY.get(doId);
+
+      // Forward the request directly to that specific stateful Durable Object instance
+      return roomStub.fetch(request);
+    }
+
+    return new Response("Not Found", { status: 404 });
+  }
+};
+
+// ==========================================
+// 2. STATEFUL DURABLE OBJECT (The Room Container)
+// ==========================================
+export class RoomLobby implements DurableObject {
+  private state: DurableObjectState;
+
+  constructor(state: DurableObjectState, env: Env) {
+    this.state = state;
+  }
+
+  async fetch(request: Request): Promise<Response> {
+    const url = new URL(request.url);
+    const pathSegments = url.pathname.split("/").filter(Boolean);
+    const action = pathSegments[3]; // "host", "join", "sync", "ice"
+    
+    const storage = this.state.storage;
+
+    try {
+      switch (action) {
+        // --- STEP 1: Host registers room and uploads SDP Offer ---
+        case "host": {
+          if (request.method !== "POST") return new Response("Method Not Allowed", { status: 405 });
+          const body: { offer: string } = await request.json();
+          
+          const hostData: PeerData = {
+            role: "host",
+            offer: body.offer,
+            iceCandidates: []
+          };
+          
+          await storage.put("host", hostData);
+          return new Response(JSON.stringify({ status: "Room created, waiting for clients." }), { headers: corsHeaders() });
+        }
+
+        // --- STEP 2: Client downloads Host Offer and uploads SDP Answer ---
+        case "join": {
+          if (request.method !== "POST") return new Response("Method Not Allowed", { status: 405 });
+          const body: { answer: string } = await request.json();
+
+          const hostData = await storage.get<PeerData>("host");
+          if (!hostData) {
+            return new Response(JSON.stringify({ error: "Room expired or does not exist." }), { status: 404, headers: corsHeaders() });
+          }
+
+          const clientData: PeerData = {
+            role: "client",
+            answer: body.answer,
+            iceCandidates: []
+          };
+
+          await storage.put("client", clientData);
+          
+          // Return the host's offer back to the client so they can finish setting up their connection local description
+          return new Response(JSON.stringify({ offer: hostData.offer }), { headers: corsHeaders() });
+        }
+
+        // --- STEP 3: Continuous Data Synchronization Loop ---
+        case "sync": {
+          const role = url.searchParams.get("role"); // "host" or "client"
+          
+          const hostData = await storage.get<PeerData>("host");
+          const clientData = await storage.get<PeerData>("client");
+
+          if (role === "host") {
+            // The host polls this endpoint to check if a client has attached an answer yet
+            return new Response(JSON.stringify({
+              connected: !!clientData,
+              answer: clientData?.answer || null,
+              remoteIceCandidates: clientData?.iceCandidates || []
+            }), { headers: corsHeaders() });
+          } else {
+            // The client polls this to receive updates about the host's changing network signatures
+            return new Response(JSON.stringify({
+              remoteIceCandidates: hostData?.iceCandidates || []
+            }), { headers: corsHeaders() });
+          }
+        }
+
+        // --- STEP 4: Network ICE Candidate trickle streaming ---
+        case "ice": {
+          if (request.method !== "POST") return new Response("Method Not Allowed", { status: 405 });
+          const role = url.searchParams.get("role"); // "host" or "client"
+          const body: { candidate: string } = await request.json();
+
+          const targetKey = role === "host" ? "host" : "client";
+          const peerData = await storage.get<PeerData>(targetKey);
+
+          if (peerData) {
+            peerData.iceCandidates.push(body.candidate);
+            await storage.put(targetKey, peerData);
+          }
+
+          return new Response(JSON.stringify({ success: true }), { headers: corsHeaders() });
+        }
+
+        default:
+          return new Response("Action Unrecognized", { status: 400 });
+      }
+    } catch (err: any) {
+      return new Response(JSON.stringify({ error: err.message }), { status: 500, headers: corsHeaders() });
+    }
+  }
+}
+
+// Shared Helper for Cross-Origin browser request compliance
+function corsHeaders() {
+  return {
+    "Content-Type": "application/json",
+    "Access-Control-Allow-Origin": "*",
+    "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
+    "Access-Control-Allow-Headers": "Content-Type"
+  };
+}
+🎮 How the Unity Client Interacts with This Worker
+When your WebGL players run the game, your C# scripts use standard UnityWebRequest calls to pump strings to this API.
+
+The complete connection protocol executes in four specific operations:
+
+The Host Routine
+Host generates an WebRTC offer token using the native browser API via .jslib.
+
+Host issues a POST request to https://your-worker.workers.dev/api/room/RoomName123/host containing the payload {"offer": "..."}.
+
+Host fires an optimization polling co-routine pointing to /api/room/RoomName123/sync?role=host every 2 seconds waiting for connected: true and an answer token string.
+
+The Client Routine
+Client wants to enter the lobby. They issue a POST request to https://your-worker.workers.dev/api/room/RoomName123/join containing their newly formulated {"answer": "..."} payload.
+
+The response returns the Host's Offer. The client feeds this into their local JavaScript WebRTC peer container.
+
+The Network Punching Phase (Trickle ICE)
+Whenever either client or host runs into an onicecandidate callback trigger inside their browser context:
+
+They make a rapid POST string upload to /api/room/RoomName123/ice?role=host (or ?role=client).
+
+Through the /sync polling loop, they discover each other's network routes and automatically open up direct P2P data channels! Transport traffic drops off the worker completely.
+
+To push this live, simply run npx wrangler deploy from your console interface.

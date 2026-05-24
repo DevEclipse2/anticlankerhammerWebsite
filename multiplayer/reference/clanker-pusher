@@ -1,0 +1,44 @@
+export default {
+  async fetch(request, env) {
+    if (request.method !== 'POST') return new Response('Method not allowed', { status: 405 });
+
+    const formData = await request.formData();
+    const socketId = formData.get('socket_id');
+    const channelName = formData.get('channel_name');
+
+    // 1. ADD AUTHENTICATION LOGIC HERE
+    // Verify the user is logged in (e.g., check a JWT in request headers)
+    const isAuthenticated = await checkUserAuth(request); 
+    if (!isAuthenticated) return new Response('Forbidden', { status: 403 });
+
+    // 2. Prepare the string to sign
+    const stringToSign = `${socketId}:${channelName}`;
+
+    // 3. Generate HMAC SHA-256 signature using Web Crypto
+    const encoder = new TextEncoder();
+    const secretKey = await crypto.subtle.importKey(
+      "raw",
+      encoder.encode(env.PUSHER_SECRET),
+      { name: "HMAC", hash: "SHA-256" },
+      false,
+      ["sign"]
+    );
+
+    const signature = await crypto.subtle.sign(
+      "HMAC",
+      secretKey,
+      encoder.encode(stringToSign)
+    );
+
+    // Convert signature to hex string
+    const hexSignature = Array.from(new Uint8Array(signature))
+      .map(b => b.toString(16).padStart(2, '0'))
+      .join('');
+
+    // 4. Return the auth object
+    const auth = `${env.PUSHER_APP_KEY}:${hexSignature}`;
+    return new Response(JSON.stringify({ auth }), {
+      headers: { 'Content-Type': 'application/json' }
+    });
+  }
+};
