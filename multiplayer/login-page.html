@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang = "en">
+    <head>
+    <!-- Primary Meta Tags -->
+    <title>Party service</title>
+    <meta name="description" content="host online games for a spectrum of people you know,acquaintances, associates, friends, enemies,apache attack helicopters etc.">
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content=   "https://www.anticlankerhammer.org">
+    <meta property="og:title" content="Clanker free gaming and free gaming in general">
+    <meta property="og:description" content="host online games for a spectrum of people on the spectrum you know,acquaintances, associates, friends, enemies,apache attack helicopters etc.">
+    <meta property="og:image" content="https://www.anticlankerhammer.org/clanka.jpg">
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://www.anticlankerhammer.org">
+    <meta property="twitter:title" content="clanker free gaming and just free gaming in general">
+    <meta property="twitter:description" content="host online games for a spectrum of people on the spectrum you know,acquaintances, associates, friends, enemies,apache attack helicopters etc.">
+    <meta property="twitter:image" content="https://www.anticlankerhammer.org/clanka.jpg"> 
+
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ANTI CLANKER HAMMER | hosting | Home to free, human made games, software and other cool stuff</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Iceberg&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Rubik+Pixels&display=swap" rel="stylesheet">
+    <style>
+        /*im just copy pasting the headers and stuff*/
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        /* MMM corposlop fonts */
+        :root {
+            --priary-color: #E34234;
+            --secondary-theme: #E82514;
+            --dark-orange: #d3480c;
+            --orange: #FF6B35;
+            --vibrant-bg: #f09d38;
+            --dark-bg: #1f1d1b;
+            --faint-orange-bg: #ffe1a4; /* for a little spazz*/
+            --text-dark: #272727;
+            --text-light: #f1efe2;
+            --text-logo: #edfffd;
+            --text-logo-anti: #ffffff;
+            --text-logo-clanker: #4a3d18;
+            --text-logo-hammer: #fff3ae;
+            --text-muted: #807b6e;  
+
+            --heading-font: 'Iceberg', cursive, sans-serif;
+            --rubik-pixels : 'Rubik Pixels', cursive;
+            --Geneva : Geneva,comic-sans;
+            --body-font: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        /*advanced science stuff yall wont understand*/
+        header {
+            background-color: var(--vibrant-bg);
+            padding: 1.5rem 3%;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 5px solid var(--secondary-theme);
+        }
+
+        .logo {
+            color: var(--text-logo-anti);
+            font-size: 3.5rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-family: var(--heading-font); 
+            line-height: 0.4;
+            
+        }
+        /*if i have to guess, this one is probably for the secondary colors*/
+        .logo span {
+            color: var(--text-logo-clanker);
+            font-family: var(--rubik-pixels);
+            font-weight: 400;
+            font-style : normal;
+        }
+        .logo second {
+            color: var(--text-logo-hammer);
+            font-family: var(--heading-font); 
+
+        }
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+        }
+
+        nav a {
+            color: var(--text-light);
+            text-decoration: none;
+            font-size: 0.95rem;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+
+        nav a:hover {
+            color: var(--orange);
+        }
+        #main-content {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 1s ease 0.5s, transform 1s ease 0.5s;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            color : var(--dark-bg);
+        }
+        .hero {
+            background: linear-gradient(135deg, var(--dark-bg) 60%, #2a2a2a 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: flex-end; 
+            /* padding: 0 20%; */
+            padding-top: 180px; /* Offset for fixed header */
+            color: var(--text-light);
+            position: relative;
+            overflow: hidden;
+        }
+         .hero h1 {
+            
+          color: var(--text-logo-anti);
+          font-size: 2.5rem;
+          font-weight: 800;
+          text-transform: uppercase;
+          letter-spacing: 1px;
+          line-height: 1.2;
+          font-family: var(--heading-font); 
+          z-index: 33;
+          padding-top: 2%;
+          /* padding-right: 0;
+          width: 100vw; */
+        }
+
+        .hero h1 span {
+            color: var(--text-logo-clanker);
+            font-family: var(--body-font);
+            font-size: 4rem;
+            font-weight: 400;
+            font-style : bold;
+            text-decoration: underline;
+            line-height: 1.1;
+            z-index:34;
+        }
+        .hero h2{
+            color: var(--text-logo-hammer);
+            font-family: var(--heading-font); 
+            font-size: 3rem;
+            line-height: 1.1;
+            z-index: 35;
+        }
+        .hero subtitle{
+            color: var(--text-light);
+            font-family: var(--body-font);
+            font-size: 2rem;
+            font-weight: 400;
+            font-style : bold;
+            line-height: -1.1;
+            letter-spacing: -2px;
+            z-index:34;
+            
+        }
+
+        .hero p {
+            font-size: 4rem;
+            margin-bottom: 2.5rem;
+            color: #CCCCCC;
+            margin-left: 60vw;
+            margin-right: 0vw;
+        }
+        .hero p {
+            font-size: 1.2rem;
+            margin-bottom: 2.5rem;
+            color: #CCCCCC;
+        }
+        .hero-content {
+            position: relative;
+            z-index: 2;
+            top: 15vw;
+            text-align: center;
+        }
+        .cta-btn {
+            display: inline-block;
+            background: linear-gradient(135deg, var(--vibrant-bg) 0%, var(--dark-orange) 100%);
+            color: var(--text-light);
+            padding: 0.8rem 2rem;
+            border-radius: 4px;
+            text-decoration: none;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            box-shadow: 0 4px 15px rgba(227, 66, 52, 0.3);
+        }
+        .cta-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(88, 41, 23, 0.671);
+        }
+    </style>
+    </head>
+    <body>
+        <header>
+            <div class="logo" style='text-align: right'>ANTI<span>CLANKER</span><second>HAMMER</second></div>
+            <nav>
+                <ul>
+                    <li><a href="https://home.anticlankerhammer.org/index.html">Home</a></li>
+                    <li><a href="host-game.html">Host games</a></li>
+                    <li><a href="https://home.anticlankerhammer.org/subpages/games/paranoia/paranoia.html">Peruse our collection</a></li>
+                </ul>
+            </nav>
+        </header>
+    </body>
+    <main>
+        <section class="hero">
+
+        <main id = "hero-content">
+            <div>
+                <h1 id="login-header">Log into our totally legitimate website</h1>
+                <input type="text" id="username" placeholder="username">
+                <input type="text" id="password" placeholder="a word that lets you pass">
+                <a class="cta-btn" id="login">Give Credentials to Israel</a>
+                <!-- this works well -->
+                <h2>no account? bye bye !/s</h2>
+                <a href="host-game.html" class="cta-btn">give us your private information</a>
+                <script type="module" src="multiplayer/join-game.js"></script>
+            </div>
+        </main>
+        </section>
+    </main>
+</html>
