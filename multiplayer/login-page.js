@@ -1,7 +1,7 @@
 const loginWorker = "";
 const btn = document.getElementById("login");
 btn.addEventListener("click", LoginToWebsite);
-const username = document.getElementById("username");
+const Username = document.getElementById("username");
 const password = document.getElementById("password");
 const text = document.getElementById("login-header");
 const original = text.textContent;
@@ -25,7 +25,7 @@ async function LoginToWebsite()
         }, 12000);
 
 
-        var data = {o: "join" ,n : dispname.value,c : roomcode.value.toUpperCase()};
+        var data = [Username.value,password.value];
         try {
             const response = await fetch(WORKER_URL, {
                 method: 'POST',
@@ -34,6 +34,10 @@ async function LoginToWebsite()
             });
             const data = await response.json();
             readReturnData(data);
+            //take this and stores as a cookie
+
+
+
             console.log('Worker replied:', data);
         } catch (error) {
             alert('Error:', error);
