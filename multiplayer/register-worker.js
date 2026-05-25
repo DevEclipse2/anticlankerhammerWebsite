@@ -23,5 +23,33 @@ export default {
         const { username,email,password} = await request.json();
         var reg_email = !(email == "no-email");
         //run email format checks
+        //hash the email
+        const salt = crypto.getRandomValues(new Uint8Array(16));
+        if(reg_email)
+        {
+            try {
+                await env.DB.prepare('INSERT INTO users (username,email, hash , salt) VALUES (?1, ?2, ?3, ?4)')
+                    .bind(username, email,password,salt)
+                    .run();
+                    return new Response("user added successfully!", { status: 201 });
+            } catch (e) 
+            {
+                return new Response(e.message, { status: 500 });
+            }
+        }
+        else
+        {
+            try 
+            {
+                await env.DB.prepare('INSERT INTO users (username, hash , salt) VALUES (?1, ?2, ?3)')
+                    .bind(username, password, salt)
+                    .run();
+                    return new Response("user added successfully!", { status: 201 });
+            } catch (e) 
+            {
+                return new Response(e.message, { status: 500 });
+            }
+        }
+        
     },
 }

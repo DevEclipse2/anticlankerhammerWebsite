@@ -3,3 +3,5 @@ add create user function
 make sure that it is in fact possible to  log in
 generate salts for passwords:
 crypto.getRandomValues(new Uint8Array(16))
+
+rotate salts 
