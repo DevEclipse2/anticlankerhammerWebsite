@@ -1,11 +1,13 @@
-const loginWorker = "";
-const btn = document.getElementById("login");
+const registerWorker = "";
+const btn = document.getElementById("register");
 btn.addEventListener("click", LoginToWebsite);
-const Username = document.getElementById("username");
-const password = document.getElementById("password");
-const text = document.getElementById("login-header");
-const original = text.textContent;
-var canPress = true;
+const Username  = document.getElementById("username");
+const password  = document.getElementById("password");
+const email     = document.getElementById("email");
+email.value = "no-email";
+const text      = document.getElementById("login-header");
+const original  = text.textContent;
+var canPress    = true;
 
 async function LoginToWebsite()
 {
@@ -25,8 +27,7 @@ async function LoginToWebsite()
         }, 12000);
 
 
-        var data = [Username.value,password.value];
-
+        var data = [Username.value,email.value,password.value];
         try {
             const response = await fetch(WORKER_URL, {
                 method: 'POST',
@@ -35,10 +36,10 @@ async function LoginToWebsite()
             });
             const data = await response.json();
             readReturnData(data);
-            document.cookie = data.headers.Set-Cookie;
+            //more data here
 
-            //debug only please
-            console.log('Worker replied:', data);
+
+
         } catch (error) {
             alert('Error:', error);
             canPress = true;
