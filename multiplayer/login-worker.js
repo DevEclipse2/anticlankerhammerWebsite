@@ -1,3 +1,9 @@
+//oh yeah in case i forget
+//  UPDATING THIS DOES NOT UPDATE THE WORKER 
+// I HAVE TO MANUALLY COPY N PASTE IT
+
+
+
 export default {
   async fetch(request, env, ctx) {
     const url = new URL(request.url);
@@ -13,64 +19,72 @@ export default {
       });
     }
 
+
     const corsHeaders = {
       "Access-Control-Allow-Origin": allowedOrigin,
       "Content-Type": "application/json",
     };
 
-    if (request.method !== 'POST') return new Response('Method not allowed', { status: 405 });
-    
-    const { username, password } = await request.json();
-    
-    //read D1 here
-    const user = await env.DB.prepare("SELECT * FROM user_id WHERE username = ?")
-      .bind(username).first();
-
-    if (!user) return new Response('Error : No user with associated name found in database', { status: 401 });
-
-    //hash and compare
-    const salt = Uint8Array.from(atob(user.salt), c => c.charCodeAt(0));
-    const inputHash = await hashPassword(password, salt);
-
-    //ripped from cloudflare examples
-    const lengthsMatch = user.hash.byteLength === inputHash.byteLength;
-    const isEqual = lengthsMatch
-      ? crypto.subtle.timingSafeEqual(user.hash, inputHash)
-      : !crypto.subtle.timingSafeEqual(user.hash, user.hash);
-
-    if (!isEqual) {
-      return new Response("Unauthorized", { status: 401 });
-    }
+     //checks if requests come from MY website
+        if (url.href.indexOf(allowedPath)!= -1) {
 
 
-    //payload from the hit videogame team fortress 2 made by valve playable only on the orange box
-    const payload = {
-        sub: user.id.toString(),
-        iat: Math.floor(Date.now() / 1000),
-        exp: Math.floor(Date.now() / 1000) + (60 * 60 * 8) // 8 hour expiry
-        //if your ass doesnt touch enough grass in 8 hours it no longer works womp womp
-    };
+      if (request.method !== 'POST') return new Response('Method not allowed', { status: 405 });
+      
+      const { username, password } = await request.json();
+      
+      //read D1 here
+      const user = await env.DB.prepare("SELECT * FROM user_id WHERE username = ?")
+        .bind(username).first();
 
-  // token, like the guy who wrote lord of the rings
-  const token = await signJWT(payload, env.JWT_SECRET);
+      if (!user) return new Response('Error : No user with associated name found in database', { status: 401 });
 
-  //i just hit the jackPOOOOOOOOT
-  return new Response(JSON.stringify({ message: "Login successful" }), {
-    status: 200,
-    headers: {
-      "Set-Cookie": `session=${token}; HttpOnly; Secure; SameSite=Strict; Path=/; Max-Age=86400`,
-      "Content-Type": "application/json"
-    }
-  });
+      //hash and compare
+      const salt = Uint8Array.from(atob(user.salt), c => c.charCodeAt(0));
+      const inputHash = await hashPassword(password, salt);
+
+      //ripped from cloudflare examples
+      const lengthsMatch = user.hash.byteLength === inputHash.byteLength;
+      const isEqual = lengthsMatch
+        ? crypto.subtle.timingSafeEqual(user.hash, inputHash)
+        : !crypto.subtle.timingSafeEqual(user.hash, user.hash);
+
+      if (!isEqual) {
+        return new Response("Unauthorized", { status: 401 });
+      }
+
+
+      //payload from the hit videogame team fortress 2 made by valve playable only on the orange box
+      const payload = {
+          sub: user.id.toString(),
+          iat: Math.floor(Date.now() / 1000),
+          exp: Math.floor(Date.now() / 1000) + (60 * 60 * 8) // 8 hour expiry
+          //if your ass doesnt touch enough grass in 8 hours it no longer works womp womp
+      };
+
+    // token, like the guy who wrote lord of the rings
+    const token = await signJWT(payload, env.JWT_SECRET);
+
+    //i just hit the jackPOOOOOOOOT
+    return new Response(JSON.stringify({ message: "Login successful" }), {
+      status: 200,
+      headers: {
+        "Set-Cookie": `session=${token}; HttpOnly; Secure; SameSite=Strict; Path=/; Max-Age=86400`,
+        "Content-Type": "application/json"
+      }
+    });
 
     //things to take into account
-    // salt and hash passwords
-    //prevent timing attacks
-
+    // salt and hash passwords ✅
+    //prevent timing attacks ✅
     //number one, receive user id 
-    //receive password hash
+    //receive password
     //query database for user and password
-
+}
+return new Response(JSON.stringify({ error: "Access Denied" }), {
+        status: 403,
+        headers: corsHeaders,
+        });
   },
 }
 //hasher
