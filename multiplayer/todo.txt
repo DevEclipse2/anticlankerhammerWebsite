@@ -5,3 +5,16 @@ generate salts for passwords:
 crypto.getRandomValues(new Uint8Array(16))
 
 rotate salts 
+
+
+
+
+security
+
+prevent injection attacks   
+rotate salts
+prevent preview
+secure important data not on main tree
+active content 
+impersonation
+6. Cross-site scripting (XSS) and cross-site request forgery (CSRF)
