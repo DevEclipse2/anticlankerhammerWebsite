@@ -1,4 +1,4 @@
-const registerWorker = "";
+const registerWorker = "https://reg-worker.anticlankerhammer.org";
 const btn = document.getElementById("register");
 btn.addEventListener("click", LoginToWebsite);
 const Username  = document.getElementById("username");
@@ -37,6 +37,8 @@ async function LoginToWebsite()
             const data = await response.json();
             readReturnData(data);
             //more data here
+            //maybe success maybe failure
+
 
 
 
@@ -49,4 +51,5 @@ async function LoginToWebsite()
     {
         alert("Everytime you spam a request, i send 500k to israel");
     }
+
 }

@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html>
+
+
+<script>
+
+    //test for wasm
+WebAssembly.instantiateStreaming(fetch('module.wasm'), importObject)
+  .then(obj => {
+    // Call your exported Wasm function here
+    obj.instance.exports.myFunction(); 
+  });
+</script>
+</html>

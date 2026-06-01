@@ -1,4 +1,4 @@
-const loginWorker = "";
+const loginWorker = "https://log-worker.anticlankerhammer.org";
 const btn = document.getElementById("login");
 btn.addEventListener("click", LoginToWebsite);
 const Username = document.getElementById("username");
