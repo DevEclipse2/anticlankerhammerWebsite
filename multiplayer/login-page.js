@@ -40,8 +40,8 @@ async function LoginToWebsite()
             //debug only please
             console.log('Worker replied:', data);
         } catch (error) {
-            console.log(error);
-            alert('Error:', error);
+            console.log(error.message);
+            alert('Error:', error.message);
             canPress = true;
         }
     }
