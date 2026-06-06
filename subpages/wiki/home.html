@@ -1,5 +1,276 @@
 <!DOCTYPE html>
 <html>
    <!--i will be copy and pasting most of the (boilerplate) code-->
-   
+
+
+<html lang="en">
+
+   <!--template for a page-->
+<head>
+    <!-- Primary Meta Tags -->
+<title><TEMPLATE></TEMPLATE></title>
+<meta name="description" content="IF YOU SEE THIS, I FUCKED UP">
+
+<!-- Open Graph / Facebook -->
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://www.anticlankerhammer.org">
+<meta property="og:title" content="TEMPLATE, REPORT IF YOU SEE THIS">
+<meta property="og:description" content="your boi messed up if you seeing this">
+<meta property="og:image" content="https://www.anticlankerhammer.org/thumbnail.jpeg">
+
+<!-- Twitter -->
+<meta property="twitter:card" content="summary_large_image">
+<meta property="twitter:url" content="https://www.anticlankerhammer.org">
+<meta property="twitter:title" content="TEMPLATE, REPORT IF YOU SEE THIS">
+<meta property="twitter:description" content="your boi messed up if you seeing this">
+<meta property="twitter:image" content="https://www.anticlankerhammer.org/thumbnail.jpeg"> 
+
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ANTI CLANKER HAMMER | Home to free, human made games, software and other cool stuff</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Iceberg&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Rubik+Pixels&display=swap" rel="stylesheet">
+    <style>
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        /* MMM corposlop fonts */
+        :root {
+            --primary-color: #E34234;
+            --secondary-theme: #E82514;
+            --dark-orange: #d3480c;
+            --orange: #FF6B35;
+            --vibrant-bg: #f09d38;
+            --dark-bg: #1f1d1b;
+            --charcoal-bg: #282a2b;
+            --faint-orange-bg: #ffe1a4; /* for a little spazz*/
+            --text-dark: #272727;
+            --text-light: #f1efe2;
+            --text-logo: #edfffd;
+            --text-logo-anti: #ffffff;
+            --text-logo-clanker: #4a3d18;
+            --text-logo-hammer: #fff3ae;
+            --text-muted: #807b6e;  
+
+            --heading-font: 'Iceberg', cursive, sans-serif;
+            --rubik-pixels : 'Rubik Pixels', cursive;
+            --Geneva : Geneva,comic-sans;
+            --body-font: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        /*advanced science stuff yall wont understand*/
+        header {
+            background-color: var(--vibrant-bg);
+            padding: 1.5rem 3%;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 5px solid var(--secondary-theme);
+        }
+        .logo {
+            color: var(--text-logo-anti);
+            font-size: 3.5rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-family: var(--heading-font); 
+            line-height: 0.4;
+            
+        }
+        /*if i have to guess, this one is probably for the secondary colors*/
+        .logo span {
+            color: var(--text-logo-clanker);
+            font-family: var(--rubik-pixels);
+            font-weight: 400;
+            font-style : normal;
+        }
+        .logo second {
+            color: var(--text-logo-hammer);
+            font-family: var(--heading-font); 
+
+        }
+
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+        }
+
+        nav a {
+            color: var(--text-light);
+            text-decoration: none;
+            font-size: 0.95rem;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+
+        nav a:hover {
+            color: var(--orange);
+        }
+
+        .pageBkg
+        {
+            background: linear-gradient(135deg, var(--dark-bg) 60%, #2a2a2a 100%);
+            display: flex;
+            align-items: center;
+            justify-content: flex-end; 
+            /* padding: 0 20%; */
+            position: relative;
+            overflow: hidden;
+        }
+        .pageBkg::before {
+            content: '';
+            position: absolute;
+            right: -10%;
+            width: 0px;
+            height: 100vh;
+            background: radial-gradient(circle, rgba(227,66,52,0.15) 0%, rgba(255,107,53,0) 70%);
+            border-radius: 50%;
+            pointer-events: none;
+        }
+        text-main {
+            color: var(--text-light);
+            font-family: var(--body-font);
+            font-weight: 400;
+            font-size: small;
+            font-style : normal;
+            align-items: center;
+        }
+        .main-page-content
+        {
+            padding-top: 80px;/* Offset for fixed header */
+            position: relative;
+            z-index: 2;
+            text-align: left;
+            flex-grow: 1;
+            min-height: 120vh;
+        }
+        .main-page-scroll
+        {
+            padding-top: 80px;/* Offset for fixed header */
+            position: relative;
+            z-index: 2;
+            text-align: left;
+            min-height: 120vh;
+            min-width: 120px;
+            width: 150px;
+            max-width: 40vw;
+            flex :1;
+            background-color: var(--charcoal-bg);
+            overflow: auto;
+        }
+        .resizer {
+            width: 10px;
+            min-height: 120vh;
+            background: var(--dark-orange);
+            cursor: col-resize; /* Shows horizontal resize cursor */
+            transition: background 0.2s;
+        }
+
+        .resizer:hover {
+        background: var(--faint-orange-bg);
+        }
+        footer {
+            background-color: var(--dark-bg);
+            color: var(--text-light);
+            width: auto;
+            
+            padding: 3rem 10% 2rem 10%;
+            text-align: center;
+            border-top: 1px solid #333;
+        }
+
+        .footer-content {
+            margin-bottom: 2rem;
+        }
+
+        .footer-content p {
+            color: #999;
+            font-size: 0.9rem;
+        }
+
+        .copyright {
+            font-size: 0.85rem;
+            color: #666;
+            border-top: 1px solid #2A2A2A;
+            padding-top: 1.5rem;
+        }
+        </style>
+        </head>
+            <body>
+                <header>
+                    <div class="logo" style='text-align: right'>ANTI<span>CLANKER</span><second>HAMMER</second></div>
+                    <nav>
+                        <ul>
+                            <li><a href="https://play.tigersoul.anticlankerhammer.org/index.html">link A</a></li>
+                        </ul>
+                    </nav>
+                </header>
+                <main id="main-content">
+            </body>
+        <body>
+            <section class="pageBkg">
+                <div class="main-page-scroll" id="left">
+                    <text-main>
+                    more-text
+
+                    </text-main>
+                </div>
+                <div class="resizer" id="dragBar"></div>
+                <div class="main-page-content" id="right">
+                    <text-main>
+                    test
+
+                    </text-main>
+                </div>
+                <script>
+                    const leftPane = document.getElementById('left');
+                    const dragBar = document.getElementById('dragBar');
+
+                    dragBar.addEventListener('mousedown', function(e) {
+                    e.preventDefault();
+                    
+                    // Track initial mouse X position and pane width
+                    const startX = e.clientX;
+                    const startWidth = leftPane.getBoundingClientRect().width;
+
+                    function onMouseMove(e) {
+                        // Calculate new width based on mouse movement distance
+                        const currentWidth = startWidth + (e.clientX - startX);
+                        leftPane.style.width = `${currentWidth}px`;
+                    }
+
+                    function onMouseUp() {
+                        // Clean up event listeners when dragging stops
+                        document.removeEventListener('mousemove', onMouseMove);
+                        document.removeEventListener('mouseup', onMouseUp);
+                    }
+
+                    // Attach to document to smoothly capture dragging outside the bar
+                    document.addEventListener('mousemove', onMouseMove);
+                    document.addEventListener('mouseup', onMouseUp);
+                    });
+                </script>
+            </section>
+        </body>
+        <footer>
+            <div class="footer-content">
+                <div class="logo" style="margin-bottom: 1rem;">ANTI<br><br><span>CLANKER</span><br><br><second>HAMMER</second></div>
+                <p>For HUMAN MADE games, software, and art</p>
+                <p>For enquiries : email azzyazimuth@anticlankerhammer.org</p>
+            </div>
+            <div class="copyright">
+                &copy; 2026 BitebyByte. All lefts and rights reserved. Built by humans.
+            </div>
+        </footer>
 </html>
