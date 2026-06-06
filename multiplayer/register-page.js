@@ -12,7 +12,7 @@ var canPress    = true;
 window.addEventListener('beforeunload', function (event) {
     // Cancel the event as stated by the standard
     event.preventDefault();
-    
+    this.alert("this page WILL not bother to save any changes you made because the developer cant be fucked");
     // Chrome/Firefox require returnValue to be set to an empty string
     event.returnValue = ''; 
 });
