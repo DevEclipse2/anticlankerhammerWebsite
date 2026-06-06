@@ -1,18 +1,41 @@
 const registerWorker = "https://reg-worker.anticlankerhammer.org";
 const btn = document.getElementById("register");
-btn.addEventListener("click", LoginToWebsite);
+btn.addEventListener("click", RegisterWebsite);
 const Username  = document.getElementById("username");
 const password  = document.getElementById("password");
+const confpassword  = document.getElementById("password2");
 const email     = document.getElementById("email");
-email.value = "no-email";
+email.value = "";
 const text      = document.getElementById("login-header");
 const original  = text.textContent;
 var canPress    = true;
 
-async function LoginToWebsite()
+window.addEventListener('beforeunload', function (event) {
+    // Cancel the event as stated by the standard
+    event.preventDefault();
+    
+    // Chrome/Firefox require returnValue to be set to an empty string
+    event.returnValue = ''; 
+});
+
+async function RegisterWebsite()
 {
     if(canPress)
     {
+        //add a few more checks here later
+        //eg username validity, check if email is ok
+
+        if(email.value == "")
+        {
+            email.value = "no-email";
+        }
+
+        if(password.value != confpassword.value)
+        {
+            alert("password and confirmation password must match!");
+            confpassword.value = "";
+        }
+
         canPress = false;
         text.textContent = "attempting to contact palantir and related 3-letter organizations, please wait...";
         //check login
@@ -39,12 +62,13 @@ async function LoginToWebsite()
             //more data here
             //maybe success maybe failure
 
-
-
-
         } catch (error) {
-            alert('Error:', error);
+            alert('Error:', error.message);
             canPress = true;
+        }
+        if(email.value == "no-email")
+        {
+            email.value = "";
         }
     }
     else
