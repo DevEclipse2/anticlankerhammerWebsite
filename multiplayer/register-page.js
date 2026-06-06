@@ -5,7 +5,6 @@ const Username  = document.getElementById("username");
 const password  = document.getElementById("password");
 const confpassword  = document.getElementById("password2");
 const email     = document.getElementById("email");
-email.value = "";
 const text      = document.getElementById("login-header");
 const original  = text.textContent;
 var canPress    = true;
