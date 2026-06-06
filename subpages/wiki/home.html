@@ -171,7 +171,7 @@
             overflow: auto;
         }
 
-        .main-page-scroll subchapter
+        .main-page-scroll .subchapter
         {
             background-color: #eee;
             color: var(--text-dark);
@@ -184,7 +184,7 @@
             font-size: 1.1rem;
         }
 
-        .main-page-scroll .active, .collapsible:hover {
+        .main-page-scroll .active, .subchapter:hover {
         background-color: #ccc;
         }
 
@@ -250,16 +250,16 @@
                 <div class="main-page-scroll" id="left">
                     <text-main>
                     <!--add collapsible menus and links, make div on the right stream html content-->
-                    <subchapter>
-                        hello, world~
-                    </subchapter>
+                    <button type="button" class="subchapter">Open Collapsible</button>
+                    <div class="content">
+                    <p>Lorem ipsum...</p>
+                    </div>
                     </text-main>
                 </div>
                 <div class="resizer" id="dragBar"></div>
                 <div class="main-page-content" id="right">
                     <text-main>
                     test
-
                     </text-main>
                 </div>
                 <script>
@@ -289,6 +289,22 @@
                     document.addEventListener('mousemove', onMouseMove);
                     document.addEventListener('mouseup', onMouseUp);
                     });
+                </script>
+                <script>
+                    var coll = document.getElementsByClassName("subchapter");
+                    var i;
+
+                    for (i = 0; i < coll.length; i++) {
+                    coll[i].addEventListener("click", function() {
+                        this.classList.toggle("active");
+                        var content = this.nextElementSibling;
+                        if (content.style.display === "block") {
+                        content.style.display = "none";
+                        } else {
+                        content.style.display = "block";
+                        }
+                    });
+                    }
                 </script>
             </section>
         </body>
