@@ -7,6 +7,14 @@ const text = document.getElementById("login-header");
 const original = text.textContent;
 var canPress = true;
 
+window.addEventListener('beforeunload', function (event) {
+    // Cancel the event as stated by the standard
+    event.preventDefault();
+    
+    // Chrome/Firefox require returnValue to be set to an empty string
+    event.returnValue = ''; 
+});
+
 async function LoginToWebsite()
 {
     if(canPress)
