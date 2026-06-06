@@ -153,7 +153,7 @@
             z-index: 2;
             text-align: left;
             flex-grow: 1;
-            min-height: 120vh;
+            height: 120vh;
         }
         .main-page-scroll
         {
@@ -161,14 +161,41 @@
             position: relative;
             z-index: 2;
             text-align: left;
-            min-height: 120vh;
+            height: 120vh;
             min-width: 120px;
             width: 150px;
             max-width: 40vw;
             flex :1;
             background-color: var(--charcoal-bg);
+            
             overflow: auto;
         }
+
+        .main-page-scroll subchapter
+        {
+            background-color: #eee;
+            color: var(--text-dark);
+            cursor: pointer;
+            padding: 18px;
+            width: 100vw;
+            border: none;
+            text-align: center;
+            outline: none;
+            font-size: 1.1rem;
+        }
+
+        .main-page-scroll .active, .collapsible:hover {
+        background-color: #ccc;
+        }
+
+        /* Style the collapsible content. Note: hidden by default */
+        .main-page-scroll .content {
+        padding: 0 18px;
+        display: none;
+        overflow: hidden;
+        background-color: #f1f1f1;
+        }
+
         .resizer {
             width: 10px;
             min-height: 120vh;
@@ -222,8 +249,10 @@
             <section class="pageBkg">
                 <div class="main-page-scroll" id="left">
                     <text-main>
-                    more-text
-
+                    <!--add collapsible menus and links, make div on the right stream html content-->
+                    <subchapter>
+                        hello, world~
+                    </subchapter>
                     </text-main>
                 </div>
                 <div class="resizer" id="dragBar"></div>
