@@ -6,11 +6,10 @@ const password  = document.getElementById("password");
 const confpassword  = document.getElementById("password2");
 const email     = document.getElementById("email");
 const text      = document.getElementById("login-header");
-const build     = document.getElementById("build-version");
-build.textContent   = "beta 0.1.3"; 
 const original      = text.textContent;
 var canPress        = true;
-
+const build     = document.getElementById("build-version");
+build.textContent   = "beta 0.1.3"; 
 window.addEventListener('beforeunload', function (event) {
     // Cancel the event as stated by the standard
     event.preventDefault();
