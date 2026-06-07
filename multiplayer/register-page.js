@@ -24,15 +24,17 @@ async function RegisterWebsite()
         //add a few more checks here later
         //eg username validity, check if email is ok
 
-        if(email.value == "")
-        {
-            email.value = "no-email";
-        }
-
+        
         if(password.value != confpassword.value)
         {
             alert("password and confirmation password must match!");
             confpassword.value = "";
+            return;
+        }
+
+        if(email.value == "")
+        {
+            email.value = "no-email";
         }
 
         canPress = false;
@@ -62,7 +64,7 @@ async function RegisterWebsite()
             //maybe success maybe failure
 
         } catch (error) {
-            alert('Error:', error.message);
+            alert('error Error:', error.message);
             canPress = true;
         }
         if(email.value == "no-email")
