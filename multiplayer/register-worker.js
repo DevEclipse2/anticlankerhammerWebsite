@@ -47,7 +47,7 @@ export default {
                 }
                 return new Response(JSON.stringify({ message: "user added successfully!" }), { 
                     status: 201,
-                    headers: corsHeaderss
+                    headers: corsHeaders
                 });
 
             }
