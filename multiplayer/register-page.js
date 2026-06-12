@@ -9,7 +9,7 @@ const text      = document.getElementById("login-header");
 const original      = text.textContent;
 var canPress        = true;
 const build     = document.getElementById("build-version");
-build.textContent   = "beta 0.1.3"; 
+build.textContent   = "beta 0.1.4"; 
 window.addEventListener('beforeunload', function (event) {
     // Cancel the event as stated by the standard
     event.preventDefault();
