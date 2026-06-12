@@ -68,8 +68,8 @@ async function RegisterWebsite()
                 alert(`Server responded with status: ${response.status}`);
                 throw new Error(`Server responded with status: ${response.status}`);
             }
-            const data = await response.json();
-            readReturnData(data);
+            const responsedata = await response.json();
+            readReturnData(responsedata);
             //more data here
             //maybe success maybe failure
 
