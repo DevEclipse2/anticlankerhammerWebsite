@@ -41,9 +41,11 @@ async function RegisterWebsite()
         canPress = false;
         text.textContent = "attempting to contact palantir and related 3-letter organizations, please wait...";
         //check login
+        
+        const controller = new AbortController();
 
-
-        setTimeout(() => {
+        const timeoutId = setTimeout(() => {
+            controller.abort();
             text.textContent = original;
             alert("operation timed out after 30 seconds. Did i forget to pay the bills again?");
         }, 30000);
@@ -57,15 +59,29 @@ async function RegisterWebsite()
             const response = await fetch(WORKER_URL, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(data)
+                body: JSON.stringify(data),
+                signal: controller.signal
             });
+            clearTimeout(timeoutId);
+            //checks for http error
+            if (!response.ok) {
+                alert(`Server responded with status: ${response.status}`);
+                throw new Error(`Server responded with status: ${response.status}`);
+            }
             const data = await response.json();
             readReturnData(data);
             //more data here
             //maybe success maybe failure
 
         } catch (error) {
-            alert('error Error:', error.message);
+            clearTimeout(timeoutId); //clear timeout
+            if (error.name === 'AbortError') {
+                console.log('Fetch aborted due to timeout.');
+            } else {
+                // fixed to actually show error
+                alert(`Error: ${error.message}`);
+            }
+            
             canPress = true;
         }
         if(email.value == "no-email")
