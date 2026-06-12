@@ -31,18 +31,18 @@ export default {
                 const reg_email = !(email == "no-email");
 
                 const usernameRegex = /^[a-zA-Z0-9_-]+$/;
-
+                if (!username || !password) {
+                    return new Response(JSON.stringify({ error: "Missing username or password" }), { 
+                        status: 400, headers: corsHeaders 
+                    });
+                }
                 if (!usernameRegex.test(username)) {
                     return new Response(JSON.stringify({ error: "bastard" }), { 
                         status: 400, 
                         headers: corsHeaders 
                     });
                 }
-                if (!username || !password) {
-                    return new Response(JSON.stringify({ error: "Missing username or password" }), { 
-                        status: 400, headers: corsHeaders 
-                    });
-                }
+                
                 //run email format checks
                 //hash the email
                 const saltArray = crypto.getRandomValues(new Uint8Array(16));
@@ -67,6 +67,18 @@ export default {
             }
             catch(e)
             {
+                if(e.message.includes("UNIQUE constraint failed"))
+                {
+                    return new Response(JSON.stringify({ 
+                    error: "account creation error", 
+                    details: "account with same email already exists. Either sign in or peace out."
+                }), { 
+                    status: 409,
+                    headers: corsHeaders
+                });
+                }
+
+
                 return new Response(JSON.stringify({ 
                     error: "unknown error", 
                     details: e.message 

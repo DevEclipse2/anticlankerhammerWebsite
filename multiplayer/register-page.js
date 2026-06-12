@@ -10,7 +10,7 @@ const original      = text.textContent;
 var canPress        = true;
 const build     = document.getElementById("build-version");
 const usernameRegex = /^[a-zA-Z0-9_-]+$/;
-build.textContent   = "beta 0.1.8"; 
+build.textContent   = "beta 0.1.9"; 
 window.addEventListener('beforeunload', function (event) {
     // Cancel the event as stated by the standard
     event.preventDefault();
@@ -52,10 +52,8 @@ async function RegisterWebsite()
             controller.abort();
             text.textContent = original;
             alert("operation timed out after 30 seconds. Did i forget to pay the bills again?");
-        }, 30000);
-        setTimeout(() => {
             canPress = true;
-        }, 12000);
+        }, 16000);
 
 
        
@@ -72,10 +70,19 @@ async function RegisterWebsite()
                 signal: controller.signal
             });
             clearTimeout(timeoutId);
+            text.textContent = original;
+            canPress = true;
             //checks for http error
             if (!response.ok) {
+                if(response.status === 409)
+                {
+                    alert('email already registered. sign in or peace out.');
+                }
                 alert(`Server responded with status: ${response.status}`);
-                throw new Error(`Server responded with status: ${response.status}`);
+            }
+            else
+            {
+                //redirect
             }
             const responsedata = await response.json();
             readReturnData(responsedata);
@@ -84,6 +91,7 @@ async function RegisterWebsite()
 
         } catch (error) {
             clearTimeout(timeoutId); //clear timeout
+            text.textContent = original;
             if (error.name === 'AbortError') {
                 console.log('Fetch aborted due to timeout.');
             } else {
@@ -91,12 +99,13 @@ async function RegisterWebsite()
                 alert(`Error: ${error.message}`);
             }
             
-            canPress = true;
         }
         if(email.value == "no-email")
         {
             email.value = "";
         }
+        
+        canPress = true;
     }
     else
     {
