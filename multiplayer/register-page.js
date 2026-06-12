@@ -9,7 +9,7 @@ const text      = document.getElementById("login-header");
 const original      = text.textContent;
 var canPress        = true;
 const build     = document.getElementById("build-version");
-build.textContent   = "beta 0.1.5"; 
+build.textContent   = "beta 0.1.7"; 
 window.addEventListener('beforeunload', function (event) {
     // Cancel the event as stated by the standard
     event.preventDefault();
@@ -54,8 +54,9 @@ async function RegisterWebsite()
         }, 12000);
 
 
-        var data = [Username.value,email.value,password.value];
+       
         try {
+             var data = [Username.value,email.value,password.value];
             const response = await fetch(registerWorker, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
