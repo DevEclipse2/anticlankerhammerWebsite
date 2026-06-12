@@ -56,7 +56,7 @@ async function RegisterWebsite()
 
         var data = [Username.value,email.value,password.value];
         try {
-            const response = await fetch(WORKER_URL, {
+            const response = await fetch(registerWorker, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(data),
