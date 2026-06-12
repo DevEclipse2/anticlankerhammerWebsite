@@ -9,7 +9,8 @@ const text      = document.getElementById("login-header");
 const original      = text.textContent;
 var canPress        = true;
 const build     = document.getElementById("build-version");
-build.textContent   = "beta 0.1.7"; 
+const usernameRegex = /^[a-zA-Z0-9_-]+$/;
+build.textContent   = "beta 0.1.8"; 
 window.addEventListener('beforeunload', function (event) {
     // Cancel the event as stated by the standard
     event.preventDefault();
@@ -24,7 +25,10 @@ async function RegisterWebsite()
     {
         //add a few more checks here later
         //eg username validity, check if email is ok
-
+        if (!usernameRegex.test(Username.value)) {
+        alert("Username can only contain letters, numbers, dashes, and underscores.");
+        return; // Stops the code from running the fetch request entirely
+        }
         
         if(password.value != confpassword.value)
         {
@@ -56,7 +60,11 @@ async function RegisterWebsite()
 
        
         try {
-             var data = [Username.value,email.value,password.value];
+             const data = {
+                username: Username.value, //inconsistent capitaling but idgaf
+                email: email.value,
+                password: password.value
+            };
             const response = await fetch(registerWorker, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },

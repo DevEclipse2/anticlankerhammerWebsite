@@ -29,6 +29,20 @@ export default {
             try{
                 const { username,email,password} = await request.json();
                 const reg_email = !(email == "no-email");
+
+                const usernameRegex = /^[a-zA-Z0-9_-]+$/;
+
+                if (!usernameRegex.test(username)) {
+                    return new Response(JSON.stringify({ error: "bastard" }), { 
+                        status: 400, 
+                        headers: corsHeaders 
+                    });
+                }
+                if (!username || !password) {
+                    return new Response(JSON.stringify({ error: "Missing username or password" }), { 
+                        status: 400, headers: corsHeaders 
+                    });
+                }
                 //run email format checks
                 //hash the email
                 const saltArray = crypto.getRandomValues(new Uint8Array(16));
