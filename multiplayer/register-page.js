@@ -25,7 +25,7 @@ async function RegisterWebsite()
     {
         //add a few more checks here later
         //eg username validity, check if email is ok
-        if (!usernameRegex.test(Username.value)) {
+        if (!usernameRegex.test(username.value)) {
         alert("Username can only contain letters, numbers, dashes, and underscores.");
         return; // Stops the code from running the fetch request entirely
         }
