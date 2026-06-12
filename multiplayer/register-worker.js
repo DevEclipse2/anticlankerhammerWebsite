@@ -2,7 +2,7 @@ export default {
   async fetch(request, env, ctx) {
         const url = new URL(request.url);
         const allowedPath = ".anticlankerhammer.org";
-        const allowedOrigin = "*"; //everything allowed in, except we don't
+        const allowedOrigin = request.headers.get("Origin") || "*";//everything allowed in, except we don't
         const corsHeaders = {
             "Access-Control-Allow-Origin": allowedOrigin,
             "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
@@ -53,7 +53,13 @@ export default {
             }
             catch(e)
             {
-                return new Response(e.message, { status: 500 });
+                return new Response(JSON.stringify({ 
+                    error: "unknown error", 
+                    details: e.message 
+                }), { 
+                    status: 500,
+                    headers: corsHeaders
+                });
             }
         }
         else
