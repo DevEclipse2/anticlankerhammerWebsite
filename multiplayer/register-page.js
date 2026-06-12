@@ -1,7 +1,7 @@
 const registerWorker = "https://reg-worker.anticlankerhammer.org";
 const btn = document.getElementById("register");
 btn.addEventListener("click", RegisterWebsite);
-const Username  = document.getElementById("username");
+const username  = document.getElementById("username");
 const password  = document.getElementById("password");
 const confpassword  = document.getElementById("password2");
 const email     = document.getElementById("email");
@@ -10,7 +10,7 @@ const original      = text.textContent;
 var canPress        = true;
 const build     = document.getElementById("build-version");
 const usernameRegex = /^[a-zA-Z0-9_-]+$/;
-build.textContent   = "beta 0.1.9"; 
+build.textContent   = "beta 0.1.10"; 
 window.addEventListener('beforeunload', function (event) {
     // Cancel the event as stated by the standard
     event.preventDefault();
@@ -59,10 +59,11 @@ async function RegisterWebsite()
        
         try {
              const data = {
-                username: Username.value, //inconsistent capitaling but idgaf
+                username: username.value, //inconsistent capitaling but idgaf
                 email: email.value,
                 password: password.value
             };
+            console.log("PAYLOAD LEAVING BROWSER:", data);
             const response = await fetch(registerWorker, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },

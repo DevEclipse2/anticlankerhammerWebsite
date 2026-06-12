@@ -12,24 +12,14 @@ export default {
         if (request.method === "OPTIONS") {
         return new Response(null, { headers: corsHeaders });
         }
-
-
-
         if (request.method !== 'POST') return new Response('Method not allowed', { status: 405, headers: corsHeaders });
-        
-
         const requestOrigin = request.headers.get("Origin") || "";
         const isFromRealWebsite = requestOrigin.endsWith(".anticlankerhammer.org");
-
         //checks if requests come from MY website
         if (isFromRealWebsite) {
-
-
-
             try{
                 const { username,email,password} = await request.json();
                 const reg_email = !(email == "no-email");
-
                 const usernameRegex = /^[a-zA-Z0-9_-]+$/;
                 if (!username || !password) {
                     return new Response(JSON.stringify({ error: "Missing username or password" }), { 
@@ -42,7 +32,6 @@ export default {
                         headers: corsHeaders 
                     });
                 }
-                
                 //run email format checks
                 //hash the email
                 const saltArray = crypto.getRandomValues(new Uint8Array(16));
@@ -63,7 +52,6 @@ export default {
                     status: 201,
                     headers: corsHeaders
                 });
-
             }
             catch(e)
             {
@@ -77,8 +65,6 @@ export default {
                     headers: corsHeaders
                 });
                 }
-
-
                 return new Response(JSON.stringify({ 
                     error: "unknown error", 
                     details: e.message 
