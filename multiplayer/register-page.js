@@ -10,7 +10,7 @@ const original      = text.textContent;
 var canPress        = true;
 const build     = document.getElementById("build-version");
 const usernameRegex = /^[a-zA-Z0-9_-]+$/;
-build.textContent   = "beta 0.1.10"; 
+build.textContent   = "beta 0.1.11"; 
 window.addEventListener('beforeunload', function (event) {
     // Cancel the event as stated by the standard
     event.preventDefault();
