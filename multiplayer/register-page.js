@@ -10,7 +10,7 @@ const original      = text.textContent;
 var canPress        = true;
 const build     = document.getElementById("build-version");
 const usernameRegex = /^[a-zA-Z0-9_-]+$/;
-build.textContent   = "beta 0.1.15"; 
+build.textContent   = "beta 0.1.16"; 
 window.addEventListener('beforeunload', function (event) {
     // Cancel the event as stated by the standard
     event.preventDefault();
@@ -77,12 +77,12 @@ async function RegisterWebsite()
             if (!response.ok) {
                 if(response.status === 409)
                 {
-                    if(responsedata.message === "user repeat")
+                    if(responsedata.error === "user repeat")
                     {
                         alert("get your own username, bum!");
 
                     }
-                    else if(responsedata.message === "email repeat")
+                    else if(responsedata.error === "email repeat")
                     {
                         alert("email already in use, sign in or peace out.");
                     }
