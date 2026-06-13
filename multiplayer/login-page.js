@@ -5,7 +5,7 @@ const username = document.getElementById("username");
 const password = document.getElementById("password");
 const text = document.getElementById("login-header");
 const original = text.textContent;
-document.getElementById("build-version").textContent = "beta 0.0.3";
+document.getElementById("build-version").textContent = "beta 0.0.4";
 var canPress = true;
 const usernameRegex = /^[a-zA-Z0-9_-]+$/;
 
@@ -29,7 +29,18 @@ async function LoginToWebsite()
         canPress = true;
         return; // Stops the code from running the fetch request entirely
         }
-
+        if(username.value === "" )
+        {
+            alert("to login , you need A USERNAME");
+            canPress = true;
+            return; // Stops the code from running the fetch request entirely
+        }
+        if(password.value === "" )
+        {
+            alert("you think we'll just take your word for it? THE PASSWORD. USE IT !");
+            canPress = true;
+            return; // Stops the code from running the fetch request entirely
+        }
         const timeoutId = setTimeout(() => {
             controller.abort();
             text.textContent = original;
