@@ -5,7 +5,7 @@ const username = document.getElementById("username");
 const password = document.getElementById("password");
 const text = document.getElementById("login-header");
 const original = text.textContent;
-document.getElementById("build-version").textContent = "beta 0.0.4";
+document.getElementById("build-version").textContent = "beta 0.0.5";
 var canPress = true;
 const usernameRegex = /^[a-zA-Z0-9_-]+$/;
 
@@ -51,7 +51,7 @@ async function LoginToWebsite()
         
 
         try {
-            const data = {username: username.value, username: password.value};
+            const data = {username: username.value, password: password.value};
         
             const response = await fetch(loginWorker, {
                 method: 'POST',

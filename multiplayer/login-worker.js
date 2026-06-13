@@ -30,7 +30,7 @@ export default {
       const { username, password } = await request.json();
       
       //read D1 here
-      const user = await env.DB.prepare("SELECT * FROM user_id WHERE username = ?")
+      const user = await env.DB.prepare("SELECT * FROM users WHERE username = ?")
         .bind(username).first();
 
       if (!user) return new Response('Error : No user with associated name found in database', { status: 401 });
