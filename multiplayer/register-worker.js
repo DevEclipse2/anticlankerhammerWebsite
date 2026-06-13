@@ -58,7 +58,7 @@ export default {
             {
                 if (e.message.includes("users.email")) {
                     return new Response(JSON.stringify({ 
-                        error: "user repeat" 
+                        error: "email repeat" 
                     }), { 
                         status: 409, 
                         headers: corsHeaders 
@@ -67,7 +67,7 @@ export default {
 
                 if (e.message.includes("users.username")) {
                     return new Response(JSON.stringify({ 
-                        error: "email repeat" 
+                        error: "user repeat" 
                     }), { 
                         status: 409, 
                         headers: corsHeaders 
