@@ -5,7 +5,7 @@ const username = document.getElementById("username");
 const password = document.getElementById("password");
 const text = document.getElementById("login-header");
 const original = text.textContent;
-document.getElementById("build-version").textContent = "beta 0.0.5";
+document.getElementById("build-version").textContent = "beta 0.0.6";
 var canPress = true;
 const usernameRegex = /^[a-zA-Z0-9_-]+$/;
 
@@ -57,6 +57,7 @@ async function LoginToWebsite()
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(data)
+                
             });
             const responsedata = await response.json();
             if (!response.ok) {
@@ -65,7 +66,6 @@ async function LoginToWebsite()
             }
             else
             {
-                //redirect
                 readReturnData(responsedata);
 
             }
@@ -93,7 +93,9 @@ async function LoginToWebsite()
 function readReturnData(data){
     if(data.message === "Login successful")
     {
-        document.cookie = data.headers.Set-Cookie;
+        if (response.ok) {
+            document.cookie = `session=${data.sessiontoken}; path=/; max-age=28800; Secure; SameSite=Strict`;
+        }
         alert("login success");
     }
 }
