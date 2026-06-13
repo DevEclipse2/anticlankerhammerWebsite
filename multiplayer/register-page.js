@@ -10,7 +10,7 @@ const original      = text.textContent;
 var canPress        = true;
 const build     = document.getElementById("build-version");
 const usernameRegex = /^[a-zA-Z0-9_-]+$/;
-build.textContent   = "beta 0.1.12"; 
+build.textContent   = "beta 0.1.13"; 
 window.addEventListener('beforeunload', function (event) {
     // Cancel the event as stated by the standard
     event.preventDefault();
@@ -53,7 +53,7 @@ async function RegisterWebsite()
             text.textContent = original;
             alert("operation timed out after 30 seconds. Did i forget to pay the bills again?");
             canPress = true;
-        }, 16000);
+        }, 30000);
 
 
        
@@ -63,7 +63,6 @@ async function RegisterWebsite()
                 email: email.value,
                 password: password.value
             };
-            console.log("PAYLOAD LEAVING BROWSER:", data);
             const response = await fetch(registerWorker, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },

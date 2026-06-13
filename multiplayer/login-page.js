@@ -1,11 +1,13 @@
 const loginWorker = "https://log-worker.anticlankerhammer.org";
 const btn = document.getElementById("login");
 btn.addEventListener("click", LoginToWebsite);
-const Username = document.getElementById("username");
+const username = document.getElementById("username");
 const password = document.getElementById("password");
 const text = document.getElementById("login-header");
 const original = text.textContent;
+document.getElementById("build-version").textContent = "beta 0.0.3";
 var canPress = true;
+const usernameRegex = /^[a-zA-Z0-9_-]+$/;
 
 window.addEventListener('beforeunload', function (event) {
     // Cancel the event as stated by the standard
@@ -22,33 +24,54 @@ async function LoginToWebsite()
         canPress = false;
         text.textContent = "attempting to contact palantir and related 3-letter organizations, please wait...";
         //check login
+        if (!usernameRegex.test(username.value)) {
+        alert("Username can only contain letters, numbers, dashes, and underscores.");
+        canPress = true;
+        return; // Stops the code from running the fetch request entirely
+        }
 
-
-        setTimeout(() => {
+        const timeoutId = setTimeout(() => {
+            controller.abort();
             text.textContent = original;
             alert("operation timed out after 30 seconds. Did i forget to pay the bills again?");
-        }, 30000);
-        setTimeout(() => {
             canPress = true;
-        }, 12000);
+        }, 30000);
 
-
-        var data = [Username.value,password.value];
+        
 
         try {
-            const response = await fetch(WORKER_URL, {
+            const data = {username: username.value, username: password.value};
+        
+            const response = await fetch(loginWorker, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(data)
             });
-            const data = await response.json();
-            readReturnData(data);
+            const responsedata = await response.json();
+            if (!response.ok) {
+                
+                alert(`Server responded with status: ${response.status}`);
+            }
+            else
+            {
+                //redirect
+                readReturnData(responsedata);
+
+            }
             
         } catch (error) {
-            console.log(error.message);
-            alert('Error:', error.message);
-            canPress = true;
+            clearTimeout(timeoutId); //clear timeout
+            text.textContent = original;
+            if (error.name === 'AbortError') {
+                console.log('Fetch aborted due to timeout.');
+            } else {
+                // fixed to actually show error
+                alert(`Error: ${error.message}`);
+            }
+            
+            
         }
+        canPress = true;
     }
     else
     {
