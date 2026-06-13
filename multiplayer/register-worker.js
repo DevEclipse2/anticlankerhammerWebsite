@@ -59,7 +59,7 @@ export default {
                 if(e.message.includes("UNIQUE constraint failed"))
                 {
                     return new Response(JSON.stringify({ 
-                    error: "account creation error", 
+                    error: "email taken", 
                     details: "account with same email already exists. Either sign in or peace out."
                 }), { 
                     status: 409,

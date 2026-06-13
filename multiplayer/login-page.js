@@ -43,10 +43,7 @@ async function LoginToWebsite()
             });
             const data = await response.json();
             readReturnData(data);
-            document.cookie = data.headers.Set-Cookie;
-
-            //debug only please
-            console.log('Worker replied:', data);
+            
         } catch (error) {
             console.log(error.message);
             alert('Error:', error.message);
@@ -56,5 +53,13 @@ async function LoginToWebsite()
     else
     {
         alert("Everytime you spam a request, i send 500k to israel");
+    }
+}
+
+function readReturnData(data){
+    if(data.message === "Login successful")
+    {
+        document.cookie = data.headers.Set-Cookie;
+        alert("login success");
     }
 }
