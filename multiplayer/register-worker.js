@@ -36,7 +36,7 @@ export default {
                 //hash the password
                 const saltArray = crypto.getRandomValues(new Uint8Array(16));
                 const saltHex = Array.from(saltArray).map(b => b.toString(16).padStart(2, '0')).join('');
-                const secureHash = hashPassword(password,saltArray);
+                const secureHash = await hashPassword(password,saltArray);
                 if(reg_email)
                 {
                     await env.DB.prepare('INSERT INTO users (username,email, hash , salt) VALUES (?1, ?2, ?3, ?4)')
@@ -104,7 +104,8 @@ export default {
 
     // Run the PBKDF2 algorithm 
     const hashBuffer = await crypto.subtle.deriveBits(
-        { name: "PBKDF2", salt: saltArray, iterations: 121000, hash: "SHA-256" },
+        //tooo particular (>100000) are not supported
+        { name: "PBKDF2", salt: saltArray, iterations: 100000, hash: "SHA-256" },
         importedKey, 
         256
     );
