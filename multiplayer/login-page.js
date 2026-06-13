@@ -5,7 +5,7 @@ const username = document.getElementById("username");
 const password = document.getElementById("password");
 const text = document.getElementById("login-header");
 const original = text.textContent;
-document.getElementById("build-version").textContent = "beta 0.0.6";
+document.getElementById("build-version").textContent = "beta 0.0.7";
 var canPress = true;
 const usernameRegex = /^[a-zA-Z0-9_-]+$/;
 
@@ -93,9 +93,8 @@ async function LoginToWebsite()
 function readReturnData(data){
     if(data.message === "Login successful")
     {
-        if (response.ok) {
-            document.cookie = `session=${data.sessiontoken}; path=/; max-age=28800; Secure; SameSite=Strict`;
-        }
+        
+        document.cookie = `session=${data.sessiontoken}; path=/; max-age=28800; Secure; SameSite=Strict`;
         alert("login success");
     }
 }
