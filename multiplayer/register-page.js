@@ -10,7 +10,7 @@ const original      = text.textContent;
 var canPress        = true;
 const build     = document.getElementById("build-version");
 const usernameRegex = /^[a-zA-Z0-9_-]+$/;
-build.textContent   = "beta 0.1.13"; 
+build.textContent   = "beta 0.1.14"; 
 window.addEventListener('beforeunload', function (event) {
     // Cancel the event as stated by the standard
     event.preventDefault();
@@ -76,9 +76,11 @@ async function RegisterWebsite()
             if (!response.ok) {
                 if(response.status === 409)
                 {
-                    alert('email already registered. sign in or peace out.');
+                    alert(response.message);
                 }
-                alert(`Server responded with status: ${response.status}`);
+                else{
+                    alert(`Server responded with status: ${response.status}`);
+                }
             }
             else
             {

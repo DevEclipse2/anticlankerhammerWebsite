@@ -6,31 +6,26 @@
 
 export default {
   async fetch(request, env, ctx) {
+
+
     const url = new URL(request.url);
     const allowedPath = ".anticlankerhammer.org";
-    const allowedOrigin = "*"; //everything allowed in, except we don't
-    if (request.method === "OPTIONS") {
-      return new Response(null, {
-        headers: {
-          "Access-Control-Allow-Origin": allowedOrigin,
-          "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
-          "Access-Control-Allow-Headers": "Content-Type",
-        },
-      });
-    }
-
-
+    const allowedOrigin = request.headers.get("Origin") || "*";//everything allowed in, except we don't
     const corsHeaders = {
-      "Access-Control-Allow-Origin": allowedOrigin,
-      "Content-Type": "application/json",
+        "Access-Control-Allow-Origin": allowedOrigin,
+        "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
+        "Access-Control-Allow-Headers": "Content-Type",
+        "Content-Type": "application/json",
     };
-
+    if (request.method === "OPTIONS") {
+    return new Response(null, { headers: corsHeaders });
+    }
+    if (request.method !== 'POST') return new Response('Method not allowed', { status: 405, headers: corsHeaders });
+    const requestOrigin = request.headers.get("Origin") || "";
+    const isFromRealWebsite = requestOrigin.endsWith(".anticlankerhammer.org");
+    
      //checks if requests come from MY website
-        if (url.href.indexOf(allowedPath)!= -1) {
-
-
-      if (request.method !== 'POST') return new Response('Method not allowed', { status: 405 });
-      
+      if (url.href.indexOf(allowedPath)!= -1) {
       const { username, password } = await request.json();
       
       //read D1 here

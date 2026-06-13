@@ -56,15 +56,22 @@ export default {
             }
             catch(e)
             {
-                if(e.message.includes("UNIQUE constraint failed"))
-                {
+                if (errorString.includes("users.email")) {
                     return new Response(JSON.stringify({ 
-                    error: "email taken", 
-                    details: "account with same email already exists. Either sign in or peace out."
-                }), { 
-                    status: 409,
-                    headers: corsHeaders
-                });
+                        error: "email already in use. Either log in or peace out" 
+                    }), { 
+                        status: 409, 
+                        headers: corsHeaders 
+                    });
+                }
+
+                if (errorString.includes("users.username")) {
+                    return new Response(JSON.stringify({ 
+                        error: "Get your own username, bum!" 
+                    }), { 
+                        status: 409, 
+                        headers: corsHeaders 
+                    });
                 }
                 return new Response(JSON.stringify({ 
                     error: "unknown error", 
