@@ -25,7 +25,8 @@ export default {
     const isFromRealWebsite = requestOrigin.endsWith(".anticlankerhammer.org");
     
      //checks if requests come from MY website
-      if (url.href.indexOf(allowedPath)!= -1) {
+    if (isFromRealWebsite) 
+    {
       const { username, password } = await request.json();
       
       //read D1 here
@@ -57,29 +58,26 @@ export default {
           //if your ass doesnt touch enough grass in 8 hours it no longer works womp womp
       };
 
-    // token, like the guy who wrote lord of the rings
-    const token = await signJWT(payload, env.JWT_SECRET);
+      // token, like the guy who wrote lord of the rings
+      const token = await signJWT(payload, env.JWT_SECRET);
 
-    //i just hit the jackPOOOOOOOOT
-    return new Response(JSON.stringify({ message: "Login successful" }), {
-      status: 200,
-      headers: {
-        "Set-Cookie": `session=${token}; HttpOnly; Secure; SameSite=Strict; Path=/; Max-Age=86400`,
-        "Content-Type": "application/json"
-      }
-    });
+      //i just hit the jackPOOOOOOOOT
+      return new Response(JSON.stringify({ message: "Login successful" }), {
+        status: 200,
+        headers: {
+          "Set-Cookie": `session=${token}; HttpOnly; Secure; SameSite=Strict; Path=/; Max-Age=86400`,
+          "Content-Type": "application/json"
+        }
+      });
 
-    //things to take into account
-    // salt and hash passwords ✅
-    //prevent timing attacks ✅
-    //number one, receive user id 
-    //receive password
-    //query database for user and password
-}
-return new Response(JSON.stringify({ error: "Access Denied" }), {
-        status: 403,
-        headers: corsHeaders,
-        });
+      //things to take into account
+      // salt and hash passwords ✅
+      //prevent timing attacks ✅
+      //number one, receive user id 
+      //receive password
+      //query database for user and password
+    }
+  return new Response(JSON.stringify({ error: "Access Denied" }), { status: 403,  headers: corsHeaders,});
   },
 }
 //hasher

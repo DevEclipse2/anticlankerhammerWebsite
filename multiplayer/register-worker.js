@@ -56,18 +56,18 @@ export default {
             }
             catch(e)
             {
-                if (errorString.includes("users.email")) {
+                if (e.message.includes("users.email")) {
                     return new Response(JSON.stringify({ 
-                        error: "email already in use. Either log in or peace out" 
+                        error: "user repeat" 
                     }), { 
                         status: 409, 
                         headers: corsHeaders 
                     });
                 }
 
-                if (errorString.includes("users.username")) {
+                if (e.message.includes("users.username")) {
                     return new Response(JSON.stringify({ 
-                        error: "Get your own username, bum!" 
+                        error: "email repeat" 
                     }), { 
                         status: 409, 
                         headers: corsHeaders 

@@ -10,7 +10,7 @@ const original      = text.textContent;
 var canPress        = true;
 const build     = document.getElementById("build-version");
 const usernameRegex = /^[a-zA-Z0-9_-]+$/;
-build.textContent   = "beta 0.1.14"; 
+build.textContent   = "beta 0.1.15"; 
 window.addEventListener('beforeunload', function (event) {
     // Cancel the event as stated by the standard
     event.preventDefault();
@@ -73,10 +73,19 @@ async function RegisterWebsite()
             text.textContent = original;
             canPress = true;
             //checks for http error
+            const responsedata = await response.json();
             if (!response.ok) {
                 if(response.status === 409)
                 {
-                    alert(response.message);
+                    if(responsedata.message === "user repeat")
+                    {
+                        alert("get your own username, bum!");
+
+                    }
+                    else if(responsedata.message === "email repeat")
+                    {
+                        alert("email already in use, sign in or peace out.");
+                    }
                 }
                 else{
                     alert(`Server responded with status: ${response.status}`);
@@ -86,10 +95,7 @@ async function RegisterWebsite()
             {
                 //redirect
                 window.location.href = 'login-page.html'; 
-
             }
-            const responsedata = await response.json();
-
             //more data here
             //maybe success maybe failure
 
