@@ -168,7 +168,7 @@
             flex :1;
             background-color: var(--charcoal-bg);
             
-            overflow: auto;
+            overflow: hidden;
         }
 
         .main-page-scroll .subchapter
@@ -179,9 +179,10 @@
             padding: 18px;
             width: 100vw;
             border: none;
-            text-align: center;
+            text-align: left;
             outline: none;
             font-size: 1.1rem;
+            overflow: hidden;
         }
 
         .main-page-scroll .active, .subchapter:hover {
@@ -192,6 +193,8 @@
         .main-page-scroll .content {
         padding: 0 18px;
         display: none;
+        text-align: left;
+
         overflow: hidden;
         background-color: #f1f1f1;
         }
