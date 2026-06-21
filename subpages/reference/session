@@ -1,0 +1,109 @@
+async function fetchPrivateData() {
+    // 1. Grab the token from storage
+    const token = localStorage.getItem("session_token");
+
+    // 2. If they don't have one, kick them back to login
+    if (!token) {
+        window.location.href = "/login.html";
+        return;
+    }
+
+    // 3. Send the request WITH the token attached
+    const response = await fetch("https://your-worker.url/api/private-data", {
+        method: "GET",
+        headers: {
+            "Content-Type": "application/json",
+            // This is the industry standard format for sending tokens:
+            "Authorization": `Bearer ${token}` 
+        }
+    });
+
+    if (response.ok) {
+        const secretData = await response.json();
+        console.log("Got the data!", secretData);
+    } else {
+        // If the server rejects the token (expired or fake), log them out
+        localStorage.removeItem("session_token");
+        window.location.href = "/login.html";
+    }
+}
+
+
+
+// A helper function to securely verify JWTs using Web Crypto
+async function verifyJWT(token, secret) {
+    try {
+        const parts = token.split('.');
+        if (parts.length !== 3) return false;
+
+        const [header, payload, signature] = parts;
+        
+        // 1. Re-create the signature using your server's secret key
+        const encoder = new TextEncoder();
+        const key = await crypto.subtle.importKey(
+            "raw", encoder.encode(secret),
+            { name: "HMAC", hash: "SHA-256" },
+            false, ["verify"]
+        );
+
+        // Convert the base64url signature back to binary
+        const sigBase64 = signature.replace(/-/g, '+').replace(/_/g, '/');
+        const sigBytes = Uint8Array.from(atob(sigBase64), c => c.charCodeAt(0));
+        
+        // 2. Verify if the math matches
+        const isValid = await crypto.subtle.verify(
+            "HMAC", key, sigBytes, encoder.encode(`${header}.${payload}`)
+        );
+
+        if (!isValid) return false;
+
+        // 3. Check if the token has expired
+        const decodedPayload = JSON.parse(atob(payload.replace(/-/g, '+').replace(/_/g, '/')));
+        const currentTimestamp = Math.floor(Date.now() / 1000);
+        
+        if (decodedPayload.exp && currentTimestamp > decodedPayload.exp) {
+            return false; // Token is expired
+        }
+
+        // Return the user data embedded in the token!
+        return decodedPayload; 
+        
+    } catch (e) {
+        return false; // Any error means the token is garbage
+    }
+}
+
+
+// --- INSIDE YOUR WORKER'S FETCH FUNCTION ---
+export default {
+    async fetch(request, env) {
+        // 1. Extract the token from the header
+        const authHeader = request.headers.get("Authorization") || "";
+        const token = authHeader.replace("Bearer ", "").trim();
+
+        if (!token) {
+            return new Response("Missing token", { status: 401 });
+        }
+
+        // 2. Verify the token using your secret
+        const userData = await verifyJWT(token, env.JWT_SECRET);
+
+        if (!userData) {
+            return new Response("Invalid or expired token", { status: 403 });
+        }
+
+        // 3. SUCCESS! The token is real. 
+        // You now know exactly who is making the request because their ID is inside `userData`
+        
+        /* Example: Fetching their private stuff
+           const myData = await env.DB.prepare('SELECT * FROM user_secrets WHERE user_id = ?1')
+               .bind(userData.sub) 
+               .all();
+        */
+
+        return new Response(JSON.stringify({ message: "Welcome to the VIP area!", user: userData.sub }), {
+            status: 200,
+            headers: { "Content-Type": "application/json" }
+        });
+    }
+}

@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Speedrun Leaderboard</title>
+    <!-- Using Tailwind CSS for quick, modern styling -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Roboto+Mono:wght@400;700&display=swap');
+        
+        body {
+            background-color: #0f172a; /* Slate 900 */
+            color: #f8fafc; /* Slate 50 */
+            font-family: 'Orbitron', sans-serif;
+        }
+        
+        .time-font {
+            font-family: 'Roboto Mono', monospace;
+        }
+
+        /* Custom scrollbar for the table container */
+        .table-container::-webkit-scrollbar {
+            width: 8px;
+        }
+        .table-container::-webkit-scrollbar-track {
+            background: #483c19; 
+        }
+        .table-container::-webkit-scrollbar-thumb {
+            background: #475569; 
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col items-center py-12 px-4 sm:px-6 lg:px-8">
+
+    <div class="w-full max-w-4xl flex flex-col gap-8">
+        
+        <!-- Header -->
+        <div class="text-center">
+            <h1 class="text-4xl sm:text-5xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-500 mb-2 uppercase tracking-wider">
+                Global Leaderboard
+            </h1>
+            <p class="text-slate-400">Fastest cleared times. Are you a true masochist?</p>
+        </div>
+
+        <!-- Leaderboard Card -->
+        <div class="bg-slate-800 rounded-xl shadow-2xl border border-slate-700 overflow-hidden">
+            
+            <div class="px-6 py-4 border-b border-slate-700 bg-slate-800/50 flex justify-between items-center">
+                <h2 class="text-lg font-semibold text-cyan-400">Top 50 Players</h2>
+                <button onclick="fetchLeaderboard()" class="text-sm px-3 py-1 bg-slate-700 hover:bg-slate-600 rounded transition-colors flex items-center gap-2">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
+                    Refresh
+                </button>
+            </div>
+
+            <div class="table-container overflow-y-auto max-h-[600px]">
+                <table class="w-full text-left border-collapse">
+                    <thead class="sticky top-0 bg-slate-900 border-b border-slate-700 z-10 text-slate-300 text-sm uppercase tracking-wider">
+                        <tr>
+                            <th class="px-6 py-4 font-semibold w-24 text-center">Rank</th>
+                            <th class="px-6 py-4 font-semibold">Player Name</th>
+                            <th class="px-6 py-4 font-semibold text-right">Time (s)</th>
+                        </tr>
+                    </thead>
+                    <tbody id="leaderboard-body" class="divide-y divide-slate-700/50">
+                        <!-- Loading State -->
+                        <tr>
+                            <td colspan="3" class="px-6 py-12 text-center text-slate-400">
+                                <div class="inline-block animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-cyan-400 mb-2"></div>
+                                <p>Loading times from server...</p>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+    </div>
+
+    <script type="module" src="code.js"></script>
+</body>
+</html>
