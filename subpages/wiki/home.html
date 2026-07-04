@@ -79,7 +79,7 @@
         }
         .logo {
             color: var(--text-logo-anti);
-            font-size: 3.5rem;
+            font-size: 1.5rem;
             font-weight: 800;
             text-transform: uppercase;
             letter-spacing: 1px;
@@ -99,7 +99,11 @@
             font-family: var(--heading-font); 
 
         }
-
+        .logo subsect {
+            color: var(--text-logo-hammer);
+            font-family: var(--heading-font); 
+            font-size: 3.5rem;
+        }
         nav ul {
             display: flex;
             list-style: none;
@@ -173,8 +177,8 @@
 
         .main-page-scroll .subchapter
         {
-            background-color: #eee;
-            color: var(--text-dark);
+            background-color: var(--dark-bg);
+            color: var(--text-light);
             cursor: pointer;
             padding: 18px;
             width: 100vw;
@@ -186,7 +190,7 @@
         }
 
         .main-page-scroll .active, .subchapter:hover {
-        background-color: #ccc;
+        background-color: var(--dark-bg);
         }
 
         /* Style the collapsible content. Note: hidden by default */
@@ -196,7 +200,7 @@
         text-align: left;
 
         overflow: hidden;
-        background-color: #f1f1f1;
+        background-color: var(--charcoal-bg);
         }
 
         .resizer {
@@ -239,10 +243,12 @@
         </head>
             <body>
                 <header>
-                    <div class="logo" style='text-align: right'>ANTI<span>CLANKER</span><second>HAMMER</second></div>
+                    <a class="logo" style='text-align: right' href="https://home.anticlankerhammer.org">ANTI<span>CLANKER</span><second>HAMMER</second></a><div class="logo" style='text-align: right'> <subsect>LiteNgine Wiki</subsect></div>
                     <nav>
                         <ul>
-                            <li><a href="https://play.tigersoul.anticlankerhammer.org/index.html">link A</a></li>
+                            <li><a href=""></a>About LiteNgine</li>
+                            <li><a href=""></a>Support</li>
+                            <li><a href="https://bytebybite.itch.io/litengine"></a>Download</li>
                         </ul>
                     </nav>
                 </header>
@@ -255,6 +261,9 @@
                     <!--add collapsible menus and links, make div on the right stream html content-->
                     <button type="button" class="subchapter">Open Collapsible</button>
                     <div class="content">
+                    <p>Lorem ipsum...</p>
+                    <p>Lorem ipsum...</p>
+                    <p>Lorem ipsum...</p>
                     <p>Lorem ipsum...</p>
                     </div>
                     </text-main>
