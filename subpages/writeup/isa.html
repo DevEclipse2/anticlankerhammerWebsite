@@ -1,0 +1,848 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ANTI CLANKER HAMMER | Triple T ISA</title>
+    <meta name="description" content="Triple T Ternary ASIC Instruction Set Architecture writeup">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://www.anticlankerhammer.org">
+    <meta property="og:title" content="Triple T ASIC Writeup — ISA">
+    <meta property="og:description" content="ts so tuff">
+    <meta property="og:image" content="https://www.anticlankerhammer.org/thumbnail.jpeg">
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://www.anticlankerhammer.org">
+    <meta property="twitter:title" content="azic">
+    <meta property="twitter:description" content="e">
+    <meta property="twitter:image" content="https://www.anticlankerhammer.org/thumbnail.jpeg">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Iceberg&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Rubik+Pixels&display=swap" rel="stylesheet">
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        :root {
+            --primary-color: #E34234;
+            --secondary-theme: #E82514;
+            --dark-orange: #d3480c;
+            --orange: #FF6B35;
+            --vibrant-bg: #f09d38;
+            --dark-bg: #1f1d1b;
+            --charcoal-bg: #282a2b;
+            --faint-orange-bg: #ffe1a4;
+            --text-dark: #272727;
+            --text-light: #f1efe2;
+            --text-logo-anti: #ffffff;
+            --text-logo-clanker: #4a3d18;
+            --text-logo-hammer: #fff3ae;
+            --text-muted: #807b6e;
+
+            --heading-font: 'Iceberg', cursive, sans-serif;
+            --rubik-pixels: 'Rubik Pixels', cursive;
+            --body-font: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--dark-bg);
+            color: var(--text-light);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        header {
+            background-color: var(--vibrant-bg);
+            padding: 1rem 3%;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+            border-bottom: 5px solid var(--secondary-theme);
+        }
+
+        .logo-group {
+            display: flex;
+            align-items: baseline;
+            gap: 1.5rem;
+        }
+
+        .logo {
+            color: var(--text-logo-anti);
+            font-size: 1.5rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-family: var(--heading-font);
+            text-decoration: none;
+            line-height: 1;
+        }
+
+        .logo span {
+            color: var(--text-logo-clanker);
+            font-family: var(--rubik-pixels);
+            font-weight: 400;
+        }
+
+        .logo .second {
+            color: var(--text-logo-hammer);
+            font-family: var(--heading-font);
+        }
+
+        .subsect {
+            color: var(--text-logo-hammer);
+            font-family: var(--heading-font);
+            font-size: 2rem;
+            text-decoration: none;
+            transition: opacity 0.2s ease;
+        }
+
+        .subsect:hover {
+            opacity: 0.85;
+        }
+
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+        }
+
+        nav a {
+            color: var(--text-dark);
+            text-decoration: none;
+            font-size: 0.95rem;
+            font-weight: 700;
+            transition: color 0.2s ease;
+        }
+
+        nav a:hover {
+            color: var(--secondary-theme);
+        }
+
+        main {
+            flex: 1;
+            padding-top: 76px; /* Offset for fixed header */
+            display: flex;
+        }
+
+        .pageBkg {
+            background: linear-gradient(135deg, var(--dark-bg) 60%, #2a2a2a 100%);
+            display: flex;
+            width: 100%;
+            min-height: calc(100vh - 76px);
+            position: relative;
+        }
+
+        .main-page-scroll {
+            min-width: 160px;
+            width: 220px;
+            max-width: 40vw;
+            flex-shrink: 0;
+            background-color: var(--charcoal-bg);
+            overflow-y: auto;
+        }
+
+        .main-page-scroll .subchapter {
+            background-color: var(--dark-bg);
+            color: var(--text-light);
+            cursor: pointer;
+            padding: 16px 18px;
+            width: 100%;
+            border: none;
+            border-bottom: 1px solid #3a3a3a;
+            text-align: left;
+            outline: none;
+            font-size: 1.05rem;
+            font-family: var(--heading-font);
+            letter-spacing: 0.5px;
+        }
+
+        .main-page-scroll .subchapter:hover,
+        .main-page-scroll .subchapter.active {
+            background-color: #2f2b27;
+            color: var(--faint-orange-bg);
+        }
+
+        .main-page-scroll .content {
+            display: block; /* Open by default for navigation */
+            background-color: var(--charcoal-bg);
+        }
+
+        .main-page-scroll .content a {
+            display: block;
+            padding: 10px 22px;
+            color: var(--text-light);
+            text-decoration: none;
+            font-size: 0.9rem;
+            border-bottom: 1px solid #333;
+            transition: background 0.15s, color 0.15s;
+        }
+
+        .main-page-scroll .content a:hover,
+        .main-page-scroll .content a.current {
+            background-color: #343638;
+            color: var(--orange);
+        }
+
+        .resizer {
+            width: 8px;
+            background: var(--dark-orange);
+            cursor: col-resize;
+            flex-shrink: 0;
+            transition: background 0.2s;
+        }
+
+        .resizer:hover {
+            background: var(--faint-orange-bg);
+        }
+
+        .main-page-content {
+            flex-grow: 1;
+            padding: 2rem 2.5rem;
+            overflow-x: auto;
+        }
+
+        .main-page-content h1 {
+            font-family: var(--heading-font);
+            color: var(--faint-orange-bg);
+            font-size: 2.2rem;
+            margin-bottom: 0.5rem;
+            letter-spacing: 1px;
+        }
+
+        .main-page-content h2 {
+            font-family: var(--heading-font);
+            color: var(--orange);
+            font-size: 1.5rem;
+            margin: 2.2rem 0 0.75rem 0;
+            border-bottom: 2px solid var(--dark-orange);
+            padding-bottom: 0.3rem;
+        }
+
+        .intro-note {
+            color: #ccc6b4;
+            font-size: 0.95rem;
+            margin-bottom: 1.5rem;
+            line-height: 1.5;
+        }
+
+        /* ISA Tables */
+        .table-wrap {
+            overflow-x: auto;
+            margin-bottom: 1.5rem;
+        }
+
+        table.isa-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.85rem;
+            background-color: #1a1816;
+            border: 1px solid #3d3832;
+        }
+
+        table.isa-table th,
+        table.isa-table td {
+            border: 1px solid #3d3832;
+            padding: 7px 8px;
+            text-align: left;
+            vertical-align: middle;
+        }
+
+        table.isa-table thead th {
+            background-color: #2d2620;
+            color: var(--faint-orange-bg);
+            font-weight: 700;
+            text-align: center;
+        }
+
+        table.isa-table tr.bit-row th {
+            background-color: #231f1b;
+            color: var(--text-muted);
+            font-size: 0.72rem;
+            padding: 3px 4px;
+            min-width: 28px;
+        }
+
+        table.isa-table tbody tr:nth-child(even) {
+            background-color: #211e1b;
+        }
+
+        table.isa-table tbody tr:hover {
+            background-color: #2c2722;
+        }
+
+        .mono {
+            font-family: Consolas, 'Courier New', monospace;
+            white-space: nowrap;
+        }
+
+        .mnemonic {
+            font-family: Consolas, 'Courier New', monospace;
+            font-weight: 700;
+            color: var(--faint-orange-bg);
+            white-space: nowrap;
+        }
+
+        .bit-cell {
+            text-align: center !important;
+            font-family: Consolas, 'Courier New', monospace;
+            font-size: 0.78rem;
+            background-color: #2a241e;
+            color: #ffd59e;
+        }
+
+        .bit-flag {
+            background-color: #2e2020;
+            color: #ff9c8a;
+        }
+
+        .bit-unused {
+            background-color: #1c1b1a;
+            color: #666;
+        }
+
+        .badge-yes {
+            color: #7ee787;
+            font-weight: 700;
+            text-align: center !important;
+        }
+
+        .badge-no {
+            color: #777;
+            text-align: center !important;
+        }
+
+        .cycles {
+            text-align: center !important;
+            white-space: nowrap;
+        }
+
+        footer {
+            background-color: var(--dark-bg);
+            color: var(--text-light);
+            padding: 2.5rem 10% 1.5rem 10%;
+            text-align: center;
+            border-top: 1px solid #333;
+        }
+
+        .footer-content {
+            margin-bottom: 1.5rem;
+        }
+
+        .footer-content p {
+            color: #999;
+            font-size: 0.9rem;
+            margin-top: 0.3rem;
+        }
+
+        .copyright {
+            font-size: 0.85rem;
+            color: #666;
+            border-top: 1px solid #2A2A2A;
+            padding-top: 1rem;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="logo-group">
+            <a class="logo" href="https://home.anticlankerhammer.org">ANTI<span>CLANKER</span><span class="second">HAMMER</span></a>
+            <a class="subsect" href="https://anticlankerhammer.org/subpages/writeup/page.html">Triple T writeup</a>
+        </div>
+        <nav>
+            <ul>
+                <li><a href="https://asic.free.nf">thing</a></li>
+                <li><a href="https://asic.hackclub.com">asic.hackclub!</a></li>
+                <li><a href="https://github.com/DevEclipse2/Triple-T-the-ternary-asic">Github page</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main id="main-content">
+        <section class="pageBkg">
+            <aside class="main-page-scroll" id="left">
+                <button type="button" class="subchapter active">Contents</button>
+                <div class="content">
+                    <a href="specs.html">speclist</a>
+                    <a href="isa.html" class="current">read about the isa</a>
+                    <a href="microcode.html">read about the microcode</a>
+                    <a href="profiling.html">profiling core</a>
+                    <a href="future.html">space for future expansion</a>
+                </div>
+            </aside>
+
+            <div class="resizer" id="dragBar"></div>
+
+            <div class="main-page-content" id="right">
+                <h1>Triple T Micro-Instruction Set Architecture (ISA)</h1>
+                <p class="intro-note">
+                    Micro-instructions are decoded from a 4-bit opcode (<code>exec_cmd</code>) and up to three 4-bit parameter nibbles (<code>P0</code>, <code>P1</code>, <code>P2</code>).
+                    For 0-, 1-, and 2-parameter classes, <code>P0</code> serves as the sub-opcode. Canonical ternary zero is encoded as <code>2'b10</code> (<code>0xAA</code> per 4 trits).
+                </p>
+
+                <!-- 0-PARAMETER INSTRUCTIONS -->
+                <h2>0-Parameter Instructions (exec_cmd = 0000)</h2>
+                <div class="table-wrap">
+                    <table class="isa-table">
+                        <thead>
+                            <tr>
+                                <th>Sub-Op (P0)</th>
+                                <th>Shorthand</th>
+                                <th>Description</th>
+                                <th>Cycles</th>
+                                <th>ALU</th>
+                                <th>Bus</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr><td class="mono">0001</td><td class="mnemonic">MAC_X</td><td>Flush MAC ladder registers (A–D) and <code>mac_carry</code> to canonical 0.</td><td class="cycles">1</td><td class="badge-no">No</td><td class="badge-no">No</td></tr>
+                            <tr><td class="mono">0010</td><td class="mnemonic">CRY_X</td><td>Clear <code>carry_reg</code> to canonical 0 (<code>2'b10</code>).</td><td class="cycles">1</td><td class="badge-no">No</td><td class="badge-no">No</td></tr>
+                            <tr><td class="mono">0011</td><td class="mnemonic">AMB_X</td><td>Reset 12t/4t/1t mask buffers (<code>0x55...</code>) and clear all active aliases.</td><td class="cycles">1</td><td class="badge-no">No</td><td class="badge-no">No</td></tr>
+                            <tr><td class="mono">0100</td><td class="mnemonic">RET</td><td>Return from macro-op: increments PC, resets counters, flushes/advances macro-op pipeline.</td><td class="cycles">2</td><td class="badge-no">No</td><td class="badge-no">No</td></tr>
+                            <tr><td class="mono">0101</td><td class="mnemonic">W_DIS</td><td>Disable register writes (<code>write_allow &lt;= 0</code>).</td><td class="cycles">1</td><td class="badge-no">No</td><td class="badge-no">No</td></tr>
+                            <tr><td class="mono">0110</td><td class="mnemonic">W_EN</td><td>Enable register writes (<code>write_allow &lt;= 1</code>).</td><td class="cycles">1</td><td class="badge-no">No</td><td class="badge-no">No</td></tr>
+                            <tr><td class="mono">0111</td><td class="mnemonic">SP_X</td><td>Clear scratchpads SP0 &amp; SP1 to canonical 0 and clear their aliases.</td><td class="cycles">1</td><td class="badge-no">No</td><td class="badge-no">No</td></tr>
+                            <tr><td class="mono">1000</td><td class="mnemonic">GP_X</td><td>Clear general-purpose registers GP6–GP8 to canonical 0 and clear their aliases.</td><td class="cycles">1</td><td class="badge-no">No</td><td class="badge-no">No</td></tr>
+                            <tr><td class="mono">1001</td><td class="mnemonic">WAIT_CMD</td><td>Stall until 2nd macro-op slot is full (DEPRECATED) (<code>THREAD_FULL</code>) or <code>direct_instr</code> is active.</td><td class="cycles">1+ (stall)</td><td class="badge-no">No</td><td class="badge-no">No</td></tr>
+                            <tr><td class="mono">1010</td><td class="mnemonic">HK</td><td>Run housekeeping cycle (commits pending aliases and background parameter writes).</td><td class="cycles">1</td><td class="badge-no">No</td><td class="badge-no">No</td></tr>
+                            <tr><td class="mono">1011</td><td class="mnemonic">PC_INC</td><td>Increment Program Counter and queue external PC sync (<code>TX_SET_PC</code>).</td><td class="cycles">1 (+TX)</td><td class="badge-no">No</td><td class="badge-yes">Yes</td></tr>
+                            <tr><td class="mono">1100</td><td class="mnemonic">MAC_P</td><td>Destinationless MAC pump: <code>mac_a &lt;= mac_c</code>, <code>mac_b &lt;= mac_d</code>.</td><td class="cycles">1</td><td class="badge-no">No</td><td class="badge-no">No</td></tr>
+                            <tr><td class="mono">1101</td><td class="mnemonic">MAC_A</td><td>Add <code>mac_b + mac_c + mac_carry</code> via ALU; store to <code>mac_b</code>/<code>mac_carry</code>, clear <code>mac_c</code>.</td><td class="cycles">2</td><td class="badge-yes">Yes</td><td class="badge-no">No</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- 1-PARAMETER INSTRUCTIONS -->
+                <h2>1-Parameter Instructions (exec_cmd = 0001)</h2>
+                <div class="table-wrap">
+                    <table class="isa-table">
+                        <thead>
+                            <tr>
+                                <th rowspan="2">Sub-Op (P0)</th>
+                                <th rowspan="2">Shorthand</th>
+                                <th colspan="4">Param 1 (P1[3:0])</th>
+                                <th rowspan="2">Description</th>
+                                <th rowspan="2">Cycles</th>
+                                <th rowspan="2">ALU</th>
+                                <th rowspan="2">Bus</th>
+                            </tr>
+                            <tr class="bit-row">
+                                <th>3</th><th>2</th><th>1</th><th>0</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="mono">0001</td><td class="mnemonic">MAC_R</td>
+                                <td colspan="2" class="bit-cell">Dest Off (+3)</td>
+                                <td colspan="2" class="bit-cell">MAC Sel (A-D)</td>
+                                <td>Read MAC reg (<code>00</code>=A..<code>11</code>=D) into 4t scratchpad (<code>addr = P1[3:2] + 3</code>).</td>
+                                <td class="cycles">1</td><td class="badge-no">No</td><td class="badge-no">No</td>
+                            </tr>
+                            <tr>
+                                <td class="mono">0010</td><td class="mnemonic">MAC_PNW</td>
+                                <td colspan="3" class="bit-cell">4t Dest Addr</td>
+                                <td class="bit-cell bit-flag">Msk</td>
+                                <td>Write <code>mac_a</code> to 4t dest (optionally masked) and pump <code>A&lt;=C, B&lt;=D</code>.</td>
+                                <td class="cycles">1</td><td class="badge-no">No</td><td class="badge-no">No</td>
+                            </tr>
+                            <tr>
+                                <td class="mono">0011</td><td class="mnemonic">4T_X</td>
+                                <td colspan="3" class="bit-cell">4t / MAC Addr</td>
+                                <td class="bit-cell bit-flag">MAC</td>
+                                <td>Clear 4t scratchpad (<code>P1[0]=0</code>) or MAC reg A–D (<code>P1[0]=1</code>) to canonical 0.</td>
+                                <td class="cycles">1</td><td class="badge-no">No</td><td class="badge-no">No</td>
+                            </tr>
+                            <tr>
+                                <td class="mono">0100</td><td class="mnemonic">HOLD</td>
+                                <td colspan="4" class="bit-cell">12t Reg Addr</td>
+                                <td>Set hold barrier on 12t register; stalls subsequent ops touching it until updated.</td>
+                                <td class="cycles">1</td><td class="badge-no">No</td><td class="badge-no">No</td>
+                            </tr>
+                            <tr>
+                                <td class="mono">0101</td><td class="mnemonic">MSK12_S</td>
+                                <td colspan="4" class="bit-cell">12t Src Addr</td>
+                                <td>Load single-use 12t mask buffer from 12t register.</td>
+                                <td class="cycles">1 (2 if HK)</td><td class="badge-no">No</td><td class="badge-no">No</td>
+                            </tr>
+                            <tr>
+                                <td class="mono">0110</td><td class="mnemonic">MSK12_P</td>
+                                <td colspan="4" class="bit-cell">12t Src Addr</td>
+                                <td>Load persistent 12t mask buffer from 12t register.</td>
+                                <td class="cycles">1 (2 if HK)</td><td class="badge-no">No</td><td class="badge-no">No</td>
+                            </tr>
+                            <tr>
+                                <td class="mono">0111</td><td class="mnemonic">MSK4</td>
+                                <td colspan="3" class="bit-cell">4t Src Addr</td>
+                                <td class="bit-cell bit-flag">Keep</td>
+                                <td>Load 4t mask buffer from 4t reg (<code>0</code>=single-use, <code>1</code>=persistent).</td>
+                                <td class="cycles">1 (2 if HK)</td><td class="badge-no">No</td><td class="badge-no">No</td>
+                            </tr>
+                            <tr>
+                                <td class="mono">1000</td><td class="mnemonic">MSK1</td>
+                                <td colspan="3" class="bit-cell">1t Src Addr</td>
+                                <td class="bit-cell bit-flag">Keep</td>
+                                <td>Load 1t mask buffer from 1t flag (<code>0</code>=single-use, <code>1</code>=persistent).</td>
+                                <td class="cycles">1 (2 if HK)</td><td class="badge-no">No</td><td class="badge-no">No</td>
+                            </tr>
+                            <tr>
+                                <td class="mono">1001</td><td class="mnemonic">HOP_R</td>
+                                <td colspan="3" class="bit-cell">4t Src Addr</td>
+                                <td class="bit-cell bit-flag">Prm</td>
+                                <td>Jump microcode <code>action_ctr</code> (<code>0</code>) or <code>param_ctr</code> (<code>1</code>) to 4t reg value; flushes ucode.</td>
+                                <td class="cycles">1 (+flush)</td><td class="badge-no">No</td><td class="badge-no">No</td>
+                            </tr>
+                            <tr>
+                                <td class="mono">1010</td><td class="mnemonic">MEM_RD</td>
+                                <td colspan="4" class="bit-cell">12t Addr / Dest</td>
+                                <td>Read 12t from external memory at address in <code>P1</code>; writes result back to <code>P1</code>.</td>
+                                <td class="cycles">2+ (bus)</td><td class="badge-no">No</td><td class="badge-yes">Yes</td>
+                            </tr>
+                            <tr>
+                                <td class="mono">1011</td><td class="mnemonic">NOP_HOG</td>
+                                <td colspan="4" class="bit-cell bit-unused">Reserved / Free Space</td>
+                                <td>No-op (reserved slot formerly for ALU priority hogging).</td>
+                                <td class="cycles">1</td><td class="badge-no">No</td><td class="badge-no">No</td>
+                            </tr>
+                            <tr>
+                                <td class="mono">1100</td><td class="mnemonic">EXT_ADR</td>
+                                <td colspan="4" class="bit-cell">12t Src Addr</td>
+                                <td>Latch lower 16 bits (8 trits) of 12t reg into <code>ext_addr_out</code> for high memory addressing.</td>
+                                <td class="cycles">1</td><td class="badge-no">No</td><td class="badge-no">No</td>
+                            </tr>
+                            <tr>
+                                <td class="mono">1101</td><td class="mnemonic">STRM_R</td>
+                                <td colspan="4" class="bit-cell">12t Src Addr</td>
+                                <td>Transmit 12t register value onto the external bus (<code>TX_SHOW_REG</code>).</td>
+                                <td class="cycles">2+ (bus)</td><td class="badge-no">No</td><td class="badge-yes">Yes</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- 2-PARAMETER INSTRUCTIONS -->
+                <h2>2-Parameter Instructions (exec_cmd = 0010)</h2>
+                <div class="table-wrap">
+                    <table class="isa-table">
+                        <thead>
+                            <tr>
+                                <th rowspan="2">Sub-Op (P0)</th>
+                                <th rowspan="2">Shorthand</th>
+                                <th colspan="4">Param 1 (P1[3:0])</th>
+                                <th colspan="4">Param 2 (P2[3:0])</th>
+                                <th rowspan="2">Description</th>
+                                <th rowspan="2">Cycles</th>
+                                <th rowspan="2">ALU</th>
+                                <th rowspan="2">Bus</th>
+                            </tr>
+                            <tr class="bit-row">
+                                <th>3</th><th>2</th><th>1</th><th>0</th>
+                                <th>3</th><th>2</th><th>1</th><th>0</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="mono">0000</td><td class="mnemonic">MOV12</td>
+                                <td colspan="4" class="bit-cell">12t Src Addr</td>
+                                <td colspan="4" class="bit-cell">12t Dest Addr</td>
+                                <td>Copy 12t register <code>P1</code> to <code>P2</code> (unmasked).</td>
+                                <td class="cycles">2</td><td class="badge-no">No</td><td class="badge-no">No</td>
+                            </tr>
+                            <tr>
+                                <td class="mono">0001</td><td class="mnemonic">LDI1</td>
+                                <td colspan="2" class="bit-cell">1t Imm</td>
+                                <td colspan="2" class="bit-cell bit-flag">Mode</td>
+                                <td colspan="3" class="bit-cell">1t Dest Addr</td>
+                                <td class="bit-cell bit-flag">Msk</td>
+                                <td>Load 1t immediate into 1t flag (or <code>carry_reg</code> if Mode=<code>10</code>).</td>
+                                <td class="cycles">2</td><td class="badge-no">No</td><td class="badge-no">No</td>
+                            </tr>
+                            <tr>
+                                <td class="mono">0010</td><td class="mnemonic">MMOV12</td>
+                                <td colspan="4" class="bit-cell">12t Src Addr</td>
+                                <td colspan="4" class="bit-cell">12t Dest Addr</td>
+                                <td>Copy 12t register <code>P1</code> to <code>P2</code> with 12t mask applied.</td>
+                                <td class="cycles">2</td><td class="badge-no">No</td><td class="badge-no">No</td>
+                            </tr>
+                            <tr>
+                                <td class="mono">0011</td><td class="mnemonic">MOV1</td>
+                                <td colspan="3" class="bit-cell">1t Src Addr</td>
+                                <td class="bit-cell bit-flag">Msk</td>
+                                <td colspan="3" class="bit-cell">1t Dest Addr</td>
+                                <td class="bit-cell bit-unused">-</td>
+                                <td>Move 1t flag <code>P1[3:1]</code> to <code>P2[3:1]</code> (optionally masked).</td>
+                                <td class="cycles">2</td><td class="badge-no">No</td><td class="badge-no">No</td>
+                            </tr>
+                            <tr>
+                                <td class="mono">0100</td><td class="mnemonic">MOV4</td>
+                                <td colspan="3" class="bit-cell">4t Src Addr</td>
+                                <td class="bit-cell bit-flag">Msk</td>
+                                <td colspan="3" class="bit-cell">4t Dest Addr</td>
+                                <td class="bit-cell bit-unused">-</td>
+                                <td>Move 4t reg <code>P1[3:1]</code> to <code>P2[3:1]</code> (optionally masked).</td>
+                                <td class="cycles">2</td><td class="badge-no">No</td><td class="badge-no">No</td>
+                            </tr>
+                            <tr>
+                                <td class="mono">0101</td><td class="mnemonic">SWP12</td>
+                                <td colspan="4" class="bit-cell">12t Reg A</td>
+                                <td colspan="4" class="bit-cell">12t Reg B</td>
+                                <td>Swap 12t registers A and B (B is deferred via 12t alias buffer).</td>
+                                <td class="cycles">2</td><td class="badge-no">No</td><td class="badge-no">No</td>
+                            </tr>
+                            <tr>
+                                <td class="mono">0110</td><td class="mnemonic">SWP4</td>
+                                <td colspan="3" class="bit-cell">4t Reg A</td>
+                                <td class="bit-cell bit-unused">-</td>
+                                <td colspan="3" class="bit-cell">4t Reg B</td>
+                                <td class="bit-cell bit-unused">-</td>
+                                <td>Swap 4t registers A and B (B is deferred via 4t alias buffer).</td>
+                                <td class="cycles">2</td><td class="badge-no">No</td><td class="badge-no">No</td>
+                            </tr>
+                            <tr>
+                                <td class="mono">0111</td><td class="mnemonic">SWP1</td>
+                                <td colspan="3" class="bit-cell">1t Reg A</td>
+                                <td class="bit-cell bit-unused">-</td>
+                                <td colspan="3" class="bit-cell">1t Reg B</td>
+                                <td class="bit-cell bit-unused">-</td>
+                                <td>Swap 1t flags A and B (B is deferred via 1t alias buffer).</td>
+                                <td class="cycles">2</td><td class="badge-no">No</td><td class="badge-no">No</td>
+                            </tr>
+                            <tr>
+                                <td class="mono">1000</td><td class="mnemonic">EXT_RD</td>
+                                <td colspan="4" class="bit-cell">Local 12t Dest</td>
+                                <td colspan="4" class="bit-cell">Ext Reg Addr</td>
+                                <td>Read 12t extended register from external bus into local 12t reg.</td>
+                                <td class="cycles">2+ (bus)</td><td class="badge-no">No</td><td class="badge-yes">Yes</td>
+                            </tr>
+                            <tr>
+                                <td class="mono">1001</td><td class="mnemonic">EXT_WR</td>
+                                <td colspan="4" class="bit-cell">Local 12t Src</td>
+                                <td colspan="4" class="bit-cell">Ext Reg Addr</td>
+                                <td>Write local 12t register to external extended register over bus.</td>
+                                <td class="cycles">2+ (bus)</td><td class="badge-no">No</td><td class="badge-yes">Yes</td>
+                            </tr>
+                            <tr>
+                                <td class="mono">1010</td><td class="mnemonic">HOP_PI</td>
+                                <td colspan="4" class="bit-cell">Imm Trits t3, t2</td>
+                                <td colspan="4" class="bit-cell">Imm Trits t1, t0</td>
+                                <td>Jump <code>param_ctr</code> to 4-trit immediate (converted to binary); flushes ucode.</td>
+                                <td class="cycles">1 (+flush)</td><td class="badge-no">No</td><td class="badge-no">No</td>
+                            </tr>
+                            <tr>
+                                <td class="mono">1011</td><td class="mnemonic">HOP_AI</td>
+                                <td colspan="4" class="bit-cell">Imm Trits t3, t2</td>
+                                <td colspan="4" class="bit-cell">Imm Trits t1, t0</td>
+                                <td>Jump <code>action_ctr</code> to 4-trit immediate (converted to binary); flushes ucode.</td>
+                                <td class="cycles">1 (+flush)</td><td class="badge-no">No</td><td class="badge-no">No</td>
+                            </tr>
+                            <tr>
+                                <td class="mono">1100</td><td class="mnemonic">GEN_MSK</td>
+                                <td colspan="4" class="bit-cell">Pos (1-3:4t, 4-15:1t)</td>
+                                <td colspan="2" class="bit-cell">Trit Val</td>
+                                <td class="bit-cell bit-flag">Keep</td>
+                                <td class="bit-cell bit-unused">-</td>
+                                <td>Generate 12t mask in <code>am_buff_12t</code> (<code>0</code> triggers overflow error).</td>
+                                <td class="cycles">2</td><td class="badge-no">No</td><td class="badge-no">No</td>
+                            </tr>
+                            <tr>
+                                <td class="mono">1101</td><td class="mnemonic">GEN_VAL</td>
+                                <td colspan="2" class="bit-cell">Fill Trit</td>
+                                <td colspan="2" class="bit-cell bit-flag">Width</td>
+                                <td colspan="4" class="bit-cell">Dest Addr (4t/1t: [3:1])</td>
+                                <td>Fill 12t (<code>00</code>), 4t (<code>01</code>), or 1t (<code>10</code>) register with repeated trit.</td>
+                                <td class="cycles">2</td><td class="badge-no">No</td><td class="badge-no">No</td>
+                            </tr>
+                            <tr>
+                                <td class="mono">1110</td><td class="mnemonic">CPY_NXT</td>
+                                <td colspan="4" class="bit-cell">12t Src Addr</td>
+                                <td colspan="4" class="bit-cell">Next Bank Dest</td>
+                                <td>Copy 12t register into the <em>next</em> macro-op's parameter register bank.</td>
+                                <td class="cycles">2</td><td class="badge-no">No</td><td class="badge-no">No</td>
+                            </tr>
+                            <tr>
+                                <td class="mono">1111</td><td class="mnemonic">MAC_MUL</td>
+                                <td class="bit-cell bit-flag">Seed</td>
+                                <td colspan="3" class="bit-cell">4t Reg A</td>
+                                <td class="bit-cell bit-unused">-</td>
+                                <td colspan="3" class="bit-cell">4t Reg B</td>
+                                <td>Multiply 4t <code>A * B</code> without pumping (<code>Seed=1</code> writes B,A; <code>0</code> writes D,C).</td>
+                                <td class="cycles">2</td><td class="badge-yes">Yes</td><td class="badge-no">No</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- 3-PARAMETER INSTRUCTIONS -->
+                <h2>3-Parameter Instructions (exec_cmd = 0011 – 1100)</h2>
+                <div class="table-wrap">
+                    <table class="isa-table">
+                        <thead>
+                            <tr>
+                                <th rowspan="2">Opcode</th>
+                                <th rowspan="2">Shorthand</th>
+                                <th colspan="4">Param 0 (P0[3:0])</th>
+                                <th colspan="4">Param 1 (P1[3:0])</th>
+                                <th colspan="4">Param 2 (P2[3:0])</th>
+                                <th rowspan="2">Description</th>
+                                <th rowspan="2">Cycles</th>
+                                <th rowspan="2">ALU</th>
+                                <th rowspan="2">Bus</th>
+                            </tr>
+                            <tr class="bit-row">
+                                <th>3</th><th>2</th><th>1</th><th>0</th>
+                                <th>3</th><th>2</th><th>1</th><th>0</th>
+                                <th>3</th><th>2</th><th>1</th><th>0</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="mono">0011</td><td class="mnemonic">ADD_SUB</td>
+                                <td colspan="3" class="bit-cell">4t Reg A</td>
+                                <td class="bit-cell bit-flag">Sub</td>
+                                <td colspan="3" class="bit-cell">4t Reg B</td>
+                                <td class="bit-cell bit-flag">Inv</td>
+                                <td colspan="3" class="bit-cell">4t Dest</td>
+                                <td class="bit-cell bit-flag">Msk</td>
+                                <td>4t Add/Sub with carry (<code>alu_cmd=1</code>); optional output invert &amp; mask.</td>
+                                <td class="cycles">3</td><td class="badge-yes">Yes</td><td class="badge-no">No</td>
+                            </tr>
+                            <tr>
+                                <td class="mono">0100</td><td class="mnemonic">MAC_PMPM</td>
+                                <td colspan="3" class="bit-cell">4t Reg A</td>
+                                <td class="bit-cell bit-flag">MskA</td>
+                                <td colspan="3" class="bit-cell">4t Reg B</td>
+                                <td class="bit-cell bit-flag">MskB</td>
+                                <td colspan="3" class="bit-cell">4t Out Dest</td>
+                                <td class="bit-cell bit-flag">MskO</td>
+                                <td>Multiply <code>A * B</code>, add <code>mac_b + C + mac_carry</code>, kick old <code>mac_a</code> to Dest, pump ladder.</td>
+                                <td class="cycles">3</td><td class="badge-yes">Yes</td><td class="badge-no">No</td>
+                            </tr>
+                            <tr>
+                                <td class="mono">0101</td><td class="mnemonic">ADD3</td>
+                                <td colspan="3" class="bit-cell">4t Reg A</td>
+                                <td colspan="3" class="bit-cell">4t Reg B</td>
+                                <td colspan="3" class="bit-cell">4t Reg C</td>
+                                <td colspan="3" class="bit-cell">4t Dest D</td>
+                                <td>3-input 4t addition <code>A + B + C + carry -&gt; D</code> (<code>alu_cmd=6</code>), packed addresses.</td>
+                                <td class="cycles">3</td><td class="badge-yes">Yes</td><td class="badge-no">No</td>
+                            </tr>
+                            <tr>
+                                <td class="mono">0110</td><td class="mnemonic">SHFT</td>
+                                <td colspan="3" class="bit-cell">4t Src A</td>
+                                <td class="bit-cell bit-flag">Msk</td>
+                                <td colspan="3" class="bit-cell">1t Amt</td>
+                                <td class="bit-cell bit-flag">Ovf</td>
+                                <td colspan="3" class="bit-cell">4t Dest</td>
+                                <td class="bit-cell bit-flag">Dir</td>
+                                <td>Trit-shift 4t A by 1t amt (<code>alu_cmd=7</code>). <code>Ovf</code>: 0=local, 1=ovf/udf; <code>Dir</code>: 0=&infin;, 1=0.</td>
+                                <td class="cycles">3</td><td class="badge-yes">Yes</td><td class="badge-no">No</td>
+                            </tr>
+                            <tr>
+                                <td class="mono">0111</td><td class="mnemonic">EVAL</td>
+                                <td colspan="3" class="bit-cell">1t Eval</td>
+                                <td class="bit-cell bit-flag">Eq</td>
+                                <td colspan="3" class="bit-cell">Act Addr</td>
+                                <td colspan="3" class="bit-cell">Prm Addr</td>
+                                <td colspan="2" class="bit-cell">Imm Trit</td>
+                                <td>Compare 1t flag to Imm Trit; if match (<code>Eq=1</code>) or mismatch (<code>Eq=0</code>), jump ucode counters.</td>
+                                <td class="cycles">1 (+flush)</td><td class="badge-no">No</td><td class="badge-no">No</td>
+                            </tr>
+                            <tr>
+                                <td class="mono">1000–1010</td><td class="mnemonic">TW1–3</td>
+                                <td colspan="3" class="bit-cell">1t Reg A</td>
+                                <td class="bit-cell bit-flag">Op2</td>
+                                <td colspan="3" class="bit-cell">1t Reg B</td>
+                                <td class="bit-cell bit-flag">Op1</td>
+                                <td colspan="3" class="bit-cell">1t Dest</td>
+                                <td class="bit-cell bit-flag">Op0/M</td>
+                                <td>1t tritwise ALU ops (<code>alu_cmd=3,4,5</code>). <code>{Op2,Op1,Op0}</code> selects sub-op; <code>P2[0]</code> also masks write.</td>
+                                <td class="cycles">3</td><td class="badge-yes">Yes</td><td class="badge-no">No</td>
+                            </tr>
+                            <tr>
+                                <td class="mono">1011</td><td class="mnemonic">LDI4</td>
+                                <td colspan="4" class="bit-cell">Imm Trits t3, t2</td>
+                                <td colspan="4" class="bit-cell">Imm Trits t1, t0</td>
+                                <td colspan="3" class="bit-cell">4t Dest</td>
+                                <td class="bit-cell bit-flag">Msk</td>
+                                <td>Load 4-trit immediate <code>{P0, P1}</code> into 4t register (optionally masked).</td>
+                                <td class="cycles">2</td><td class="badge-no">No</td><td class="badge-no">No</td>
+                            </tr>
+                            <tr>
+                                <td class="mono">1100</td><td class="mnemonic">SLICE</td>
+                                <td colspan="4" class="bit-cell">12t (or 4t [3:1])</td>
+                                <td colspan="3" class="bit-cell">4t / 1t Addr</td>
+                                <td class="bit-cell bit-flag">4↔1</td>
+                                <td colspan="2" class="bit-cell">Idx</td>
+                                <td class="bit-cell bit-flag">Msk</td>
+                                <td class="bit-cell bit-flag">Ins</td>
+                                <td>Extract (<code>Ins=0</code>) or insert (<code>Ins=1</code>) a slice between 12t↔4t (<code>P1[0]=0</code>) or 4t↔1t (<code>P1[0]=1</code>).</td>
+                                <td class="cycles">2</td><td class="badge-no">No</td><td class="badge-no">No</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="footer-content">
+            <div class="logo" style="margin-bottom: 1rem;">ANTI<br><br><span>CLANKER</span><br><br><span class="second">HAMMER</span></div>
+            <p>For HUMAN MADE games, software, and art</p>
+            <p>For enquiries: email azzyazimuth@anticlankerhammer.org</p>
+        </div>
+        <div class="copyright">
+            &copy; 2026 BitebyByte. All lefts and rights reserved. Built by humans.
+        </div>
+    </footer>
+
+    <script>
+        // Resizable sidebar
+        const leftPane = document.getElementById('left');
+        const dragBar = document.getElementById('dragBar');
+
+        dragBar.addEventListener('mousedown', function (e) {
+            e.preventDefault();
+            const startX = e.clientX;
+            const startWidth = leftPane.getBoundingClientRect().width;
+
+            function onMouseMove(e) {
+                const currentWidth = startWidth + (e.clientX - startX);
+                leftPane.style.width = `${currentWidth}px`;
+            }
+
+            function onMouseUp() {
+                document.removeEventListener('mousemove', onMouseMove);
+                document.removeEventListener('mouseup', onMouseUp);
+            }
+
+            document.addEventListener('mousemove', onMouseMove);
+            document.addEventListener('mouseup', onMouseUp);
+        });
+
+        // Collapsible sidebar sections
+        const coll = document.getElementsByClassName('subchapter');
+        for (let i = 0; i < coll.length; i++) {
+            coll[i].addEventListener('click', function () {
+                this.classList.toggle('active');
+                const content = this.nextElementSibling;
+                content.style.display = (content.style.display === 'none') ? 'block' : 'none';
+            });
+        }
+    </script>
+</body>
+</html>
